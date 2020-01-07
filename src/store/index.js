@@ -8,7 +8,7 @@ import Mutations from './mutations'
 import Getters from './getters'
 
 //引入modules
-// import user from './modules/user'
+import user from './modules/user.js'
 
 Vue.use(Vuex)
 
@@ -18,6 +18,6 @@ export default new Vuex.Store({
   actions:Actions,
   getters:Getters,
   modules:{
-    // user
+    user
   }
 })

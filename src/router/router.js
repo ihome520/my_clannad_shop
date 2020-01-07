@@ -1,16 +1,36 @@
-export default
-  [
-    {
-      path: '/',
-      name: 'home',
-      component: ()=>import('views/Home.vue')
-    },
-    {
-      path: '/about',
-      name: 'about',
-      // route level code-splitting
-      // this generates a separate chunk (about.[hash].js) for this route
-      // which is lazy-loaded when the route is visited.
-      component: () => import(/* webpackChunkName: "about" */ 'views/About.vue')
+export default [
+  {
+    path:'/',
+    redirect:'/home'
+  },
+  {
+    path: '/home',
+    name:'home',
+    component: () => import('views/home/Home.vue'),
+    meta:{
+      fullScreen:false,
     }
-  ]
+  },
+  {
+    path: '/category',
+    name:'category',
+    component: () => import('views/category/Category.vue')
+  },
+  {
+    path: '/cart',
+    name:'cart',
+    component: () => import('views/cart/Cart.vue')
+  },
+  {
+    path: '/user',
+    name:'user',
+    component: () => import('views/user/User.vue')
+  },
+  {
+    path: '*',
+    component: () => import('views/errors/NotFound.vue'),
+    meta:{
+      fullScreen:true
+    }
+  },
+]

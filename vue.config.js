@@ -12,8 +12,9 @@ module.exports = {
       .set('@', resolve('src'))
       .set('assets',resolve('src/assets'))
       .set('components',resolve('src/components'))
-      .set('network',resolve('src/network'))
       .set('views',resolve('src/views'))
-      .set('common',resolve('src/common'))
+      .set('lib',resolve('src/lib'))
+      .set('api',resolve('src/api'))
+      .set('config',resolve('src/config'))
   }
 }
