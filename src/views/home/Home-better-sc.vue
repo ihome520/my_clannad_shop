@@ -1,7 +1,10 @@
 <template>
   <div class="home">
     <!--search-->
-    <search/>
+    <van-search v-model="searchKeyWord" placeholder="请输入搜索关键词" show-action shape="round" @search="onSearch">
+      <div slot="action" @click="onSearch">搜索</div>
+    </van-search>
+
     <!--<div class='container' v-infinite-scroll="loadMore"
          infinite-scroll-distance="50"
          infinite-scroll-immediate-check="false">
@@ -19,8 +22,9 @@
       </div>
     </div>-->
 
-    <div class="main-page-wrapper">
-      <view-scroll :onLoadMore="onLoadMore" :enableLoadMore="enableLoadMore">
+      <scroll class="container" ref="scroll" @loadMore="loadMore"
+              :probe-type="3"
+              @pageScrollEvent="pageScrollEvent">
         <home-swiper :banner="banner"/>
         <!--主分类-->
         <home-category :category="category"/>
@@ -29,12 +33,11 @@
         <!--<home-floor/>-->
 
         <!--首页推荐-->
-        <home-recommend ref="recom" :recom_categorys="recom_categorys" :goods-list="goodsList" @tabChange="tabChange"/>
+        <home-recommend ref="recom" :recom_categorys="recom_categorys" :goods-list="goodsList" @tabChange="tabChange" @imgLoad="imgLoad"/>
         <div class="no-data" v-show="noData">
           -- 没有更多了 --
         </div>
-      </view-scroll>
-    </div>
+      </scroll>
   </div>
 </template>
 
@@ -43,8 +46,7 @@
   import HomeRecommend from './components/HomeRecommend'
   import HomeSwiper from './components/HomeSwiper'
 
-  import ViewScroll from 'components/viewScroll/ViewScroll'
-  import Search from 'components/search/Search'
+  import Scroll from 'components/scroll/Scroll'
 
   import {HttpRequest} from 'api/api'
 
@@ -54,11 +56,12 @@
       HomeSwiper,
       HomeCategory,
       HomeRecommend,
-      ViewScroll,
-      Search
+      Scroll
+      // HomeFloor
     },
     data() {
       return {
+        searchKeyWord: '',
         banner: [],
         category: [],
         currentCategory: 0, //当前分类的id
@@ -66,7 +69,6 @@
         recom_categorys: [],
         goodsList: [],
         noData: false,
-        enableLoadMore: true,
       }
     },
     mounted() {
@@ -81,25 +83,36 @@
       }
     },
     methods: {
-      onLoadMore(done) {
-        setTimeout(()=>{
-          if(!this.enableLoadMore) {
-            return
-          }
-          console.log('load...');
-          this.getMoreGoods();
-          // done();
-        }, 200)
+      pageScrollEvent(position){
+        // console.log(position);
+      },
+      imgLoad(){
+        this.$refs['scroll'].refresh();
+        this.$refs['recom'].tabResize();
+      },
+      loadMore(){
+        console.log('loadmore');
+        this.getMoreGoods();
       },
       //*********-*********************-*
       //事件监听类
       tabChange(id) { //推荐分类栏的数据获取
         this.goodsList = [];
         this.noData = false;
-        this.enableLoadMore = true;
         this.cur_page = 1;
         this.currentCategory = id;
         this.getHomeGoods(id);
+
+        this.$refs['scroll'].refresh();
+      },
+      /**********************************************************************************/
+      onSearch() { //搜索
+        if (this.searchKeyWord) {
+          //执行搜索
+          this.$toast(this.searchKeyWord)
+        } else {
+          this.$toast('请输入要搜索的内容')
+        }
       },
       getHomeInfo() { //首页的基本信息
         HttpRequest('/home/index').then(res => {
@@ -116,7 +129,6 @@
             this.goodsList = res.data.data;
           }else{
             this.noData = true
-            this.enableLoadMore = false
           }
         })
       },
@@ -130,7 +142,6 @@
           }).then(res => {
             if (res.data.current_page == res.data.last_page) {
               this.noData = true;
-              this.enableLoadMore = false
             }
 
             if (res.data.data.length > 0) {
@@ -140,8 +151,13 @@
               this.noData = true;
             }
 
+            //触底事件完成后通知插件
+            this.$refs.scroll.finishPullUp();
           })
         }
+
+        this.$refs.scroll.finishPullUp();
+
       }
     }
   }
@@ -151,14 +167,19 @@
   .home{
     height: 100vh;
   }
-
-  .main-page-wrapper {
-    position: relative;
-    display: flex;
-    height: 100%;
-    -webkit-box-orient: vertical;
-    flex-direction: column;
+  .container {
+    position: absolute;
+    overflow: hidden;
+    top: 54px;
+    bottom: 50px;
+    left: 0;
+    right: 0;
   }
+
+  /*.container{
+    height: calc(100% - 104px);
+    overflow: hidden;
+  }*/
 
   .no-data {
     text-align: center;

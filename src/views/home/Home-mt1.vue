@@ -1,39 +1,25 @@
 <template>
   <div class="home">
     <!--search-->
-    <search/>
-    <!--<div class='container' v-infinite-scroll="loadMore"
+    <van-search v-model="searchKeyWord" placeholder="请输入搜索关键词" show-action shape="round" @search="onSearch">
+      <div slot="action" @click="onSearch">搜索</div>
+    </van-search>
+
+    <div class='container' v-infinite-scroll="loadMore"
          infinite-scroll-distance="50"
          infinite-scroll-immediate-check="false">
       <home-swiper :banner="banner"/>
-      &lt;!&ndash;主分类&ndash;&gt;
+      <!--主分类-->
       <home-category :category="category"/>
-      &lt;!&ndash;秒杀专场 待准备&ndash;&gt;
-      &lt;!&ndash;楼层推荐&ndash;&gt;
-      &lt;!&ndash;<home-floor/>&ndash;&gt;
+      <!--秒杀专场 待准备-->
+      <!--楼层推荐-->
+      <!--<home-floor/>-->
 
-      &lt;!&ndash;首页推荐&ndash;&gt;
+      <!--首页推荐-->
       <home-recommend :recom_categorys="recom_categorys" :goods-list="goodsList" @tabChange="tabChange"/>
       <div class="no-data" v-show="noData">
-        &#45;&#45; 没有更多了 &#45;&#45;
+        -- 没有更多了 --
       </div>
-    </div>-->
-
-    <div class="main-page-wrapper">
-      <view-scroll :onLoadMore="onLoadMore" :enableLoadMore="enableLoadMore">
-        <home-swiper :banner="banner"/>
-        <!--主分类-->
-        <home-category :category="category"/>
-        <!--秒杀专场 待准备-->
-        <!--楼层推荐-->
-        <!--<home-floor/>-->
-
-        <!--首页推荐-->
-        <home-recommend ref="recom" :recom_categorys="recom_categorys" :goods-list="goodsList" @tabChange="tabChange"/>
-        <div class="no-data" v-show="noData">
-          -- 没有更多了 --
-        </div>
-      </view-scroll>
     </div>
   </div>
 </template>
@@ -43,9 +29,6 @@
   import HomeRecommend from './components/HomeRecommend'
   import HomeSwiper from './components/HomeSwiper'
 
-  import ViewScroll from 'components/viewScroll/ViewScroll'
-  import Search from 'components/search/Search'
-
   import {HttpRequest} from 'api/api'
 
   export default {
@@ -54,19 +37,18 @@
       HomeSwiper,
       HomeCategory,
       HomeRecommend,
-      ViewScroll,
-      Search
+      // HomeFloor
     },
     data() {
       return {
+        searchKeyWord: '',
         banner: [],
         category: [],
         currentCategory: 0, //当前分类的id
         cur_page: 1,//当前页
         recom_categorys: [],
         goodsList: [],
-        noData: false,
-        enableLoadMore: true,
+        noData:false
       }
     },
     mounted() {
@@ -81,25 +63,26 @@
       }
     },
     methods: {
-      onLoadMore(done) {
-        setTimeout(()=>{
-          if(!this.enableLoadMore) {
-            return
-          }
-          console.log('load...');
-          this.getMoreGoods();
-          // done();
-        }, 200)
+      loadMore(){
+        this.getMoreGoods();
       },
       //*********-*********************-*
       //事件监听类
       tabChange(id) { //推荐分类栏的数据获取
         this.goodsList = [];
         this.noData = false;
-        this.enableLoadMore = true;
         this.cur_page = 1;
         this.currentCategory = id;
         this.getHomeGoods(id);
+      },
+      /**********************************************************************************/
+      onSearch() { //搜索
+        if (this.searchKeyWord) {
+          //执行搜索
+          this.$toast(this.searchKeyWord)
+        } else {
+          this.$toast('请输入要搜索的内容')
+        }
       },
       getHomeInfo() { //首页的基本信息
         HttpRequest('/home/index').then(res => {
@@ -114,23 +97,19 @@
         }).then(res => {
           if (res.data.data.length > 0) {
             this.goodsList = res.data.data;
-          }else{
-            this.noData = true
-            this.enableLoadMore = false
           }
         })
       },
       //加载更多
       getMoreGoods() {
-        if (!this.noData) {
+        if(!this.noData){
           this.$toast('加载中...');
           HttpRequest('/home/goods', 'get', {
             'page': this.cur_page + 1,
             'category_id': this.currentCategory
           }).then(res => {
-            if (res.data.current_page == res.data.last_page) {
+            if(res.data.current_page == res.data.last_page){
               this.noData = true;
-              this.enableLoadMore = false
             }
 
             if (res.data.data.length > 0) {
@@ -139,32 +118,23 @@
             } else {
               this.noData = true;
             }
-
           })
         }
+
       }
     }
   }
 </script>
 
 <style scoped>
-  .home{
-    height: 100vh;
-  }
-
-  .main-page-wrapper {
-    position: relative;
-    display: flex;
+  .container{
     height: 100%;
-    -webkit-box-orient: vertical;
-    flex-direction: column;
+    width: 100%;
   }
-
-  .no-data {
+  .no-data{
     text-align: center;
     position: relative;
     bottom: 50px;
     color: #c2d0d0;
   }
-
 </style>
