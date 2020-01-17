@@ -3,25 +3,23 @@
     <search/>
     <van-tree-select
       height="100vh"
-      :items="items"
+      :items="category"
+      :main-active-index="category.id"
       :main-active-index.sync="activeIndex"
+      @click-nav="navCLick"
     >
 
-        <template slot="content">
-          <div class="category-goods">
-            <scroll class="container" ref="scroll" @loadMore="loadMore">
-              <child-category @childClick.navtive="childClick"/>
-              <goods-list @imgLoad="imgLoad" :goods-list="goodsList" />
-              <!--<div class="no-data" v-show="noData">
-                &#45;&#45; 没有更多了 &#45;&#45;
-              </div>
-
-              <div class="on-bottom">
-                &#45;&#45; 到底啦 &#45;&#45;
-              </div>-->
-            </scroll>
-          </div>
-        </template>
+      <template slot="content">
+        <div class="category-goods">
+          <scroll class="container" ref="scroll" @loadMore="loadMore">
+            <child-category ref="child_category" :children="children" @childClick="childClick"/>
+            <goods-list ref="goods_list" @imgLoad="imgLoad" :goods-list="goodsList" @orderGoods="orderGoods"/>
+            <div class="no-data" v-show="noData">
+              -- 没有更多了 --
+            </div>
+          </scroll>
+        </div>
+      </template>
     </van-tree-select>
   </div>
 </template>
@@ -45,94 +43,194 @@
     data() {
       return {
         activeIndex: 0,
-        items: [{text: '分组 1'}, {text: '分组 2'}],
-        noData: true,
-
-        goodsList: [
-          {
-            id: 1,
-            goods_name: '夏季新款男士纯棉短袖T恤吸汗透气男装',
-            thumb: 'https://s2.ax1x.com/2020/01/06/lsbp4K.jpg',
-            price: 99.99
-          },
-          {
-            id: 2,
-            goods_name: '夏季新款男士纯棉短袖T恤吸汗透气男装',
-            thumb: 'https://s2.ax1x.com/2020/01/06/lsbp4K.jpg',
-            price: 99.99
-          },
-          {
-            id: 3,
-            goods_name: '夏季新款男士纯棉短袖T恤吸汗透气男装',
-            thumb: 'https://s2.ax1x.com/2020/01/06/lsbp4K.jpg',
-            price: 99.99
-          },
-          {
-            id: 4,
-            goods_name: '夏季新款男士纯棉短袖T恤吸汗透气男装',
-            thumb: 'https://s2.ax1x.com/2020/01/06/lsbp4K.jpg',
-            price: 99.99
-          },
-          {
-            id: 5,
-            goods_name: '夏季新款男士纯棉短袖T恤吸汗透气男装',
-            thumb: 'https://s2.ax1x.com/2020/01/06/lsbp4K.jpg',
-            price: 99.99
-          },
-          {
-            id: 6,
-            goods_name: '夏季新款男士纯棉短袖T恤吸汗透气男装',
-            thumb: 'https://s2.ax1x.com/2020/01/06/lsbp4K.jpg',
-            price: 99.99
-          },
-          {
-            id: 7,
-            goods_name: '夏季新款男士纯棉短袖T恤吸汗透气男装',
-            thumb: 'https://s2.ax1x.com/2020/01/06/lsbp4K.jpg',
-            price: 99.99
-          },
-          {
-            id: 7,
-            goods_name: '夏季新款男士纯棉短袖T恤吸汗透气男装',
-            thumb: 'https://s2.ax1x.com/2020/01/06/lsbp4K.jpg',
-            price: 99.99
-          }
-        ]
+        category: [],
+        categoryIdsKv: [],//键值对数组 对应分类的每一个标签
+        noData: false,
+        children: [],
+        goodsList:[],
+        currCategoryId: 0,//当前选中的id
+        nextPage: 2,//下一页
+        isLoading:false,//上拉加载状态
+        sort:'created_at',
+        order_by:'desc',
       }
     },
-    mounted(){
+    watch: {
+      categoryIdsKv(newData) {
+        this.currCategoryId = newData['0'] ? newData['0'] : 0;
+        if (this.currCategoryId) { //如果有大分类数据回来，就请求子分类
+          this.getChildCategory(this.currCategoryId) //获得子分类
+          this.getGoods({
+            category_id:this.currCategoryId
+          }) //获得商品
+        }
+      }
+    },
+    mounted() {
       this.$refs['scroll'].refresh();
+      //先获取所有分类
+      this.getAllCategory();
     },
     methods: {
-      childClick(e){
-        console.log(11234);
-        console.log(e);
+      /**
+       * 排序事件监听
+       */
+      orderGoods(order_type){
+        this.noData = false;
+        this.isLoading = false;//关闭加载状态
+        this.nextPage = 2;
+
+        switch (order_type) {
+          case 'time_desc':
+                this.sort = 'created_at';
+                this.order_by = 'desc';
+            break;
+          case 'price_desc':
+              this.sort = 'price';
+              this.order_by = 'desc';
+            break;
+          case 'price_asc':
+              this.sort = 'price';
+              this.order_by = 'asc';
+            break;
+          case 'sort_asc':
+              this.sort = 'sort';
+              this.order_by = 'asc';
+            break;
+          case 'sort_desc':
+              this.sort = 'sort';
+              this.order_by = 'desc';
+            break;
+          default:
+        }
+
+        let params = {
+          category_id:this.currCategoryId,
+          sort:this.sort,
+          order_by:this.order_by
+        }
+
+        this.getGoods(params);
+
       },
-      // childClick(category_id) {
-      //   this.activeChildIndex = category_id;
-      //   console.log(category_id);
-      // },
-      // orderClick(index) {
-      //   this.orderIndex = index;
-      // },
-      imgLoad(){
-        console.log('sss');
+      /**
+       * 子分类点击
+       */
+      childClick(category_id) {
+        this.noData = false;
+        this.isLoading = false;//关闭加载状态
+        this.nextPage = 2;
+        this.currCategoryId = category_id;
+        this.getGoods({
+          category_id:category_id
+        });
+      },
+      /**
+       * 图片加载监听，完成刷新scroll
+       */
+      imgLoad() {
         this.$refs['scroll'].refresh();
       },
-      loadMore(){
-        console.log('loadmore');
-        this.$refs.scroll.finishPullUp();
-      },
+      /**
+       * 加载更多
+       */
+      loadMore() {
+        if(this.isLoading == false){
+          console.log('loadmore');
 
+          if(this.noData == false){ //有数据的时候才加载
+            this.isLoading = true; //把加载状态设置为true 防止重复加载
+            this.$toast({
+                message:'加载中...',
+                forbidClick:true
+              })
+              HttpRequest('category/goods','get',{
+                category_id:this.currCategoryId,
+                page:this.nextPage,
+                sort:this.sort,
+                order_by:this.order_by
+              }).then(res=>{
+                this.goodsList.push(...res.data.data);
+                if(res.data.current_page == res.data.last_page){ //最后一页了，没数据了，就设置成没有数据
+                  this.noData = true; //加载完成后，把无数据状态设置为true
+                  this.nextPage = 2; //复原下一页 用于其他分类的加载
+                }
+                this.nextPage += 1; //加载成功后，下一页往下加
+                this.isLoading = false;//关闭加载状态
+                this.$toast.clear();//关闭提示
+              }).catch(res=>{
+                this.$toast.clear();
+                this.isLoading = false;
+              })
+          }
+          this.$refs.scroll.finishPullUp();
+        }
+      },
+      /**
+       * 获得所有大分类
+       */
+      getAllCategory() {
+        HttpRequest('category/categorys').then(res => {
+          this.category = res.data.categorys;
+
+          //做成一个键值对，对应每一个分类数据
+          res.data.categorys.forEach(item => {
+            this.categoryIdsKv.push(item.id);
+          })
+        })
+      },
+      /**
+       * 左侧导航大分类点击
+       */
+      navCLick(index) {
+        this.noData = false;
+        let currCategoryId = this.categoryIdsKv[index];
+        //获取分类下的子分类
+        this.getChildCategory(currCategoryId);
+        //把当前分类指向选择的分类
+        this.currCategoryId =  currCategoryId;
+        //获得商品
+        this.getGoods({
+          category_id: currCategoryId,
+        });
+
+        this.$refs['child_category'].activeChildIndex = 0;
+        this.$refs['goods_list'].orderIndex = 0;
+
+        //复原排序
+        this.sort='created_at';
+        this.order_by='desc';
+      },
+      /**
+       * 获得分类下的子分类
+       * @param id
+       */
+      getChildCategory(id) {
+        HttpRequest('/category/getChildCategory', 'get', {
+          id: id
+        }).then(res => {
+          this.children = res.data;
+        })
+      },
+      /**
+       * 获得商品
+       * @param params 对象参数
+       */
+      getGoods(params) {
+        HttpRequest('category/goods', 'get', params).then(res => {
+          this.goodsList = res.data.data;
+        })
+      }
     }
   }
 </script>
 
 <style scoped lang="less">
-  .category-goods{
+  .category-goods {
     height: 100vh;
     position: relative;
   }
+
   .container {
     position: absolute;
     overflow: hidden;
@@ -147,9 +245,5 @@
     position: relative;
     bottom: 50px;
     color: #c2d0d0;
-  }
-
-  .on-bottom{
-    height: 100vh;
   }
 </style>

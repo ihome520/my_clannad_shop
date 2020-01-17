@@ -38,7 +38,6 @@
       })
 
       this.scroll.on('pullingUp',()=>{
-        console.log(111);
         this.$emit('loadMore');
       })
 
@@ -53,7 +52,6 @@
       this.scroll.on('pullingDown', () => {
         console.log('处理下拉刷新操作')
         setTimeout(() => {
-          console.log('asfsaf')
 // 事情做完，需要调用此方法告诉 better-scroll 数据已加载，否则下拉事件只会执行一次
           this.scroll.finishPullDown()
         }, 1000)

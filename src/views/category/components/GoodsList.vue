@@ -1,21 +1,23 @@
 <template>
   <div class="goods-list">
     <div class="order-area">
-      <span :class="[{'order-active':orderIndex == item.id},'order-area-item']"
+      <span :class="[{'order-active':orderIndex == index},'order-area-item']"
             v-for="(item,index) in order"
             :key="index"
-            @click="orderClick(item.id)"
+            @click="orderClick(index)"
       >{{ item.name }}</span>
     </div>
 
     <div class="goods-box">
       <div class="goods-item" v-for="(item,index) in goodsList" :key="index">
-        <img :src="item.thumb" @load="imgLoad"/>
-        <div>
-          <span>{{ item.goods_name }}</span>
-          <div class="price">￥{{ item.price }}</div>
-          <i></i>
-        </div>
+        <router-link :to="'/goods/' + item.id">
+          <img :src="item.thumb" @load="imgLoad"/>
+          <div>
+            <span>{{ item.goods_name }}</span>
+            <div class="price">￥{{ item.price }}</div>
+            <i></i>
+          </div>
+        </router-link>
       </div>
 
     </div>
@@ -25,17 +27,17 @@
 <script>
   export default {
     name: "GoodsList",
-    props:{
-      goodsList:{
-        type:Array,
-        default(){
+    props: {
+      goodsList: {
+        type: Array,
+        default() {
           return []
         }
       }
     },
     data() {
       return {
-        orderIndex: 1,
+        orderIndex: 0,
         order: [
           {
             id: 1,
@@ -43,11 +45,11 @@
           },
           {
             id: 2,
-            name: '价格'
+            name: '价格↓'
           },
           {
             id: 3,
-            name: '综合'
+            name: '默认排序↓'
           }
         ],
       }
@@ -55,6 +57,29 @@
     methods: {
       orderClick(index) {
         this.orderIndex = index;
+        switch (index) {
+          case 0:
+            this.$emit('orderGoods', 'time_desc')
+            break;
+          case 1:
+            if (this.order[index].name == '价格↓') {
+              this.$emit('orderGoods', 'price_asc')
+              this.order[index].name = '价格↑'
+            } else {
+              this.$emit('orderGoods', 'price_desc')
+              this.order[index].name = '价格↓'
+            }
+            break;
+          case 2:
+            if (this.order[index].name == '默认排序↓') {
+              this.$emit('orderGoods', 'sort_asc')
+              this.order[index].name = '默认排序↑'
+            } else {
+              this.$emit('orderGoods', 'sort_desc')
+              this.order[index].name = '默认排序↓'
+            }
+        }
+
       },
       imgLoad() {
         this.$emit('imgLoad')
@@ -83,7 +108,7 @@
     width: 100%;
     flex-wrap: wrap;
     justify-content: space-between;
-    margin-bottom: 50px;
+    padding-bottom: 50px;
 
     .goods-item {
       width: 47%;

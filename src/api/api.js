@@ -95,8 +95,16 @@ instance.interceptors.response.use(function (response) {
       },1500)
       break;
 
-    default:
+    case 403:
+      Toast({
+        message:'访问权限不足',
+      })
+      break;
+
+    case 200:
       return response.data;
+    default:
+
   }
 
 

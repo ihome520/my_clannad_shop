@@ -27,6 +27,14 @@ export default [
     component: () => import('views/user/User.vue')
   },
   {
+    path: '/goods/:id',
+    name:'user',
+    component: () => import('views/goods/Goods.vue'),
+    meta:{
+      fullScreen:true,
+    }
+  },
+  {
     path: '*',
     component: () => import('views/errors/NotFound.vue'),
     meta:{
