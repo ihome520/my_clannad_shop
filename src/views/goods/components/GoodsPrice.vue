@@ -1,14 +1,14 @@
 <template>
   <div class="goods_price">
     <div class="price">
-      <span class="left">￥ 99.9</span>
+      <span class="left">￥{{ goods_price }}</span>
       <span class="right">
         <van-icon name="star-o" />
         <div>收藏</div>
       </span>
     </div>
     <div class="title">
-      夏季新款男士纯棉透气吸汗Polo格子衬衫T恤打底衫
+      {{ goods_title }}
     </div>
   </div>
 </template>
@@ -20,15 +20,46 @@
 
     },
     props:{
-
+      goods:{
+        type:Object,
+        default(){
+          return {}
+        }
+      },//夏季新款男士纯棉透气吸汗Polo格子衬衫T恤打底衫
+      goods_inventory:{
+        type: Array,
+        default() {
+          return [];
+        }
+      }
     },
     data(){
       return {
-
+        goods_title:'',
+        goods_price:'9.99-999.99',
       }
     },
     watch:{
+      goods: {
+        handler(newValue, oldValue) {
+          this.goods_title = newValue.goods_name
+        },
+        deep:true
+      },
+      goods_inventory:{
+        handler(newValue, oldValue) {
+          //处理最高价和最低价
+          let prices = [];
+          newValue.forEach(res=>{
+            prices.push(res.price);
+          })
 
+          prices.sort();//排序
+          //取最高和最低价格 低-》高
+          this.goods_price = prices.shift() + '~' + prices.pop();
+        },
+        deep:true
+      }
     },
     filter:{
 
@@ -62,6 +93,7 @@
 
   .title{
     padding: 5px;
+    font-size: 15px;
   }
 
 </style>

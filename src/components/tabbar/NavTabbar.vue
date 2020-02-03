@@ -56,8 +56,8 @@
           return res.pathName == path;
         })
 
-        console.log(index);
-        console.log(path);
+        // console.log(index);
+        // console.log(path);
         if(index != -1){
           this.active = index;
         }

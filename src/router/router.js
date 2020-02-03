@@ -35,6 +35,14 @@ export default [
     }
   },
   {
+    path:'/login',
+    name:'login',
+    component: () => import('views/login/Login.vue'),
+    meta:{
+      fullScreen:true
+    }
+  },
+  {
     path: '*',
     component: () => import('views/errors/NotFound.vue'),
     meta:{

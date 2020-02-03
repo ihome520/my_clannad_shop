@@ -1,6 +1,6 @@
 export default {
   state:{
-    token:'sss',
+    token:'',
   },
   actions:{
 

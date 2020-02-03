@@ -27,19 +27,19 @@ instance.interceptors.request.use(function (config) {
 
 
 //普通请求处理请求数据
-const HttpRequest = (url,method = 'get',params = {},file = false) => {
+const HttpRequest = (url, method = 'get', params = {}, file = false) => {
   let config = {
-    url:url,
-    method: 'get', // default
+    url: url,
+    method: method, // default
   }
 
-  if(method == 'get'){
-      config.params = params;
-  }else if(method == 'post'){
-    config.data = qs.stringify(params);
+  if (method == 'get') {
+    config.params = params;
+  } else if (method == 'post') {
+    config.data = Qs.stringify(params);
   }
 
-  if(file){ //表示要上传文件
+  if (file) { //表示要上传文件
     config.headers = {
       'Content-Type': 'multipart/form-data',
     }
@@ -49,27 +49,27 @@ const HttpRequest = (url,method = 'get',params = {},file = false) => {
 }
 
 
-const AuthRequest = (url,method = 'get',params = {},file = false) => {
+const AuthRequest = (url, method = 'get', params = {}, file = false) => {
   let headers = {
-    Authrization:'Bearer ' + store.getters.getToken,
+    Authrization: 'Bearer ' + store.getters.getToken,
   }
 
-  if(file && method == 'post'){ //表示要上传文件
+  if (file && method == 'post') { //表示要上传文件
     headers = {
-      Authrization:'Bearer ' + store.getters.getToken,
+      Authrization: 'Bearer ' + store.getters.getToken,
       'Content-Type': 'multipart/form-data',
     }
   }
 
   let config = {
-    url:url,
-    method: 'get', // default
+    url: url,
+    method: method, // default
     headers
   }
 
-  if(method == 'get'){
+  if (method == 'get') {
     config.params = params;
-  }else if(method == 'post'){
+  } else if (method == 'post') {
     config.data = Qs.stringify(params);
   }
 
@@ -83,36 +83,40 @@ instance.interceptors.response.use(function (response) {
   // Toast.clear();
   // console.log(response.data.code);
 
-  switch (response.data.code){
+  switch (response.data.code) {
+    case 200:
+      return response.data;
+
     case 401:
       Toast({
-        message:'请先登录',
-        duration:1500
+        message: '请先登录',
+        duration: 1500
       })
 
-      setTimeout(()=>{
+      setTimeout(() => {
         router.replace('/login');
-      },1500)
+      }, 1500)
       break;
 
     case 403:
       Toast({
-        message:'访问权限不足',
+        message: '访问权限不足',
       })
       break;
 
-    case 200:
-      return response.data;
+    case 400:
+      Toast()
+      break;
+
     default:
-
+      return response.data;
   }
-
-
 
   // return response;
 }, function (error) {
   // 对响应错误做点什么
   // Toast.clear();
+  console.log(error);
   return Promise.reject(error);
 });
 
