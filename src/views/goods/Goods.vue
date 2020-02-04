@@ -2,7 +2,7 @@
   <div class="goods">
     <van-nav-bar title="商品详情" left-text="返回" left-arrow @click-left="onClickLeft"/>
     <goods-swiper :album="goods_album"/>
-    <goods-price :goods="goods" :goods_inventory="goods_inventory"/>
+    <goods-price :goods="goods" :goods_inventory="goods_inventory" :select_goods_price="select_goods_price"/>
     <goods-attr :goods_spec="goods_spec" :goods_inventory="goods_inventory" @changeSelectSpec="changeSelectSpec"/>
     <goods-detail :content="goods.description"/>
     <goods-buy :disabled_buy="disabled_buy" @addToCart="addToCart" @buyGoods="buyGoods"/>
@@ -16,59 +16,60 @@
   import GoodsDetail from "./components/GoodsDetail";
   import GoodsBuy from "./components/GoodsBuy";
 
-  import { HttpRequest } from "../../api/api";
+  import {HttpRequest, AuthRequest} from "@/api/api";
 
   export default {
     name: "Goods",
-    components:{
+    components: {
       GoodsSwiper,
       GoodsPrice,
       GoodsAttr,
       GoodsDetail,
       GoodsBuy
     },
-    data(){
+    data() {
       return {
         goods_album: [],
-        goods_id:0,
-        goods:{
-          type:Object,
-          default(){
+        goods_id: 0,
+        goods: {
+          type: Object,
+          default() {
             return {}
           }
         },
-        goods_spec:[],
-        goods_inventory:[],
-        inventoryKv:{},//库存键值对
-        disabled_buy:false,//是否可以购买，当库存不足时，不可购买
-        choose_spec:[],
-        goods_num:1,
+        goods_spec: [],
+        goods_inventory: [],
+        inventoryKv: {},//库存键值对
+        disabled_buy: false,//是否可以购买，当库存不足时，不可购买
+        choose_spec: [],
+        goods_num: 1,
+        select_goods_price:'', //当前选中商品属性的价格
       }
     },
-    watch:{
-      goods_inventory:{
-        handler(newData){
+    watch: {
+      goods_inventory: {
+        handler(newData) {
           //做一个键值对
           newData.forEach(item => {
             this.inventoryKv[item.sku_list] = item;
           })
         },
-        deep:true
+        deep: true
       },
     },
-    mounted(){
-      console.log(this.$route);
+    mounted() {
+      this.goods_id = this.$route.params.id;
       this.getGoodsInfo();
     },
-    methods:{
-      onClickLeft(){
-        this.$router.back(-1);
+    methods: {
+      onClickLeft() {
+        this.$router.push('/category');
       },
       /**
        * 选中的属性
        * @param skuData
        */
-      changeSelectSpec(skuData){
+      changeSelectSpec(skuData) {
         console.log(skuData);
         this.choose_spec = skuData.choose_spec; //已经选中的sku
         this.goods_num = skuData.goods_num;//商品数量
@@ -76,67 +77,84 @@
         let filterSpec = this.choose_spec.filter(res => {
           return res != '';
         })
-        if(filterSpec.length == this.goods_spec.length){
+        if (filterSpec.length == this.goods_spec.length) {
           let stock = this.inventoryKv[this.choose_spec].inventory;
-          console.log('lkuc---',stock);
-          if(stock < 1){
+          this.select_goods_price = this.inventoryKv[this.choose_spec].price; //修改价格
+
+          if (stock < 1) {
             this.disabled_buy = true; //无货，不可购买
             this.$toast({
               message: '该规格库存不足'
             })
-          }else{
+          } else {
             this.disabled_buy = false;
           }
-        }else{
+        } else {
+          this.select_goods_price = '';//没有全选中属性
           this.disabled_buy = false;
         }
       },
       /**
        * 加购
        */
-      addToCart(){
+      addToCart() {
         let filterSpec = this.choose_spec.filter(res => {
           return res != '';
         })
-        if(filterSpec.length != this.goods_spec.length){
+        if (filterSpec.length != this.goods_spec.length) {
           this.$toast('请选择完整的商品规格');
+          return false
         }
+
+        let goods_sku = this.choose_spec.toString();
+        console.log(goods_sku);
+        let data = {
+          sku_list: this.choose_spec.toString(),
+          goods_id: this.goods_id,
+          number: this.goods_num
+        }
+
+        AuthRequest('/cart/store', 'post', data).then(res => {
+          console.log(res);
+          this.$toast(res.msg);
+        })
       },
       /**
        * 直接购买
        */
-      buyGoods(){
+      buyGoods() {
         let filterSpec = this.choose_spec.filter(res => {
           return res != '';
         })
-        if(filterSpec.length != this.goods_spec.length){
+        if (filterSpec.length != this.goods_spec.length) {
           this.$toast('请选择完整的商品规格');
+          return false
         }
+
+        console.log('下单');
       },
-      getGoodsInfo(){
-        HttpRequest('/goods/show/' + this.$route.params.id).then(res=>{
-          if(res.code == 404){
+      getGoodsInfo() {
+        HttpRequest('/goods/show/' + this.$route.params.id).then(res => {
+          if (res.code == 404) {
             this.$toast({
-              message:res.msg,
+              message: res.msg,
             })
 
-            setTimeout(()=>{
+            setTimeout(() => {
               this.$router.back(-1);
-            },1000)
+            }, 1000)
 
-            setTimeout(()=>{
+            setTimeout(() => {
               location.reload();
-            },2000)
+            }, 2000)
 
             return false;
           }
 
-          console.log(res);
           this.goods_album = res.data.goods_album;
           this.goods = res.data.goods;
           this.goods_spec = res.data.goods_spec;
           this.goods_inventory = res.data.goods_inventory;
-
         })
       }
     }

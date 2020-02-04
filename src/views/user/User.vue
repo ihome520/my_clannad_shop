@@ -18,11 +18,12 @@
     methods:{
       //检查是否有token，如果没有，表示没有登录
       getUserInfo(){
-        let token = this.$store.state.user.token;
-
-        if(!token){ //未登录
-          this.$router.replace('/login');
-        }
+        // let token = this.$store.state.user.token;
+        //
+        // if(!token){ //未登录
+        //   this.$router.replace('/login');
+        // }
+        console.log(this.$router.currentRoute);
       }
     }
   }

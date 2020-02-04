@@ -19,12 +19,18 @@ export default [
   {
     path: '/cart',
     name:'cart',
-    component: () => import('views/cart/Cart.vue')
+    component: () => import('views/cart/Cart.vue'),
+    meta:{
+      requireAuth: true
+    }
   },
   {
     path: '/user',
     name:'user',
-    component: () => import('views/user/User.vue')
+    component: () => import('views/user/User.vue'),
+    meta:{
+      requireAuth:true
+    }
   },
   {
     path: '/goods/:id',

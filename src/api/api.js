@@ -7,7 +7,7 @@ import router from '@/router'
 const instance = axios.create();
 
 instance.defaults.baseURL = 'https://wx.17hxg.com/api';
-instance.defaults.timeout = 3000;
+instance.defaults.timeout = 30000;
 
 // 添加请求拦截器
 instance.interceptors.request.use(function (config) {
@@ -51,12 +51,12 @@ const HttpRequest = (url, method = 'get', params = {}, file = false) => {
 
 const AuthRequest = (url, method = 'get', params = {}, file = false) => {
   let headers = {
-    Authrization: 'Bearer ' + store.getters.getToken,
+    Authorization: 'Bearer ' + localStorage.getItem('userToken')
   }
 
   if (file && method == 'post') { //表示要上传文件
     headers = {
-      Authrization: 'Bearer ' + store.getters.getToken,
+      Authorization: 'Bearer ' + localStorage.getItem('userToken'),
       'Content-Type': 'multipart/form-data',
     }
   }
@@ -79,33 +79,39 @@ const AuthRequest = (url, method = 'get', params = {}, file = false) => {
 
 // 添加响应拦截器
 instance.interceptors.response.use(function (response) {
-  //判断响应头中是否有新的token
-  // Toast.clear();
-  // console.log(response.data.code);
+  //判断响应头中有没有新token
+  console.log(response);
+  if(response.headers.Authrization){
+    let tokenArr = response.headers.Authrization.split(" ");
+    localStorage.setItem('userToken',tokenArr[1]);
+  }
 
   switch (response.data.code) {
-    case 200:
+    case 200: //请求成功
       return response.data;
+      break;
 
-    case 401:
+    case 204: //退出
+      router.replace('/home');
+      break;
+
+    case 401: // 未认证
       Toast({
         message: '请先登录',
         duration: 1500
       })
 
       setTimeout(() => {
-        router.replace('/login');
+        router.push('/login');
       }, 1500)
       break;
 
-    case 403:
-      Toast({
-        message: '访问权限不足',
-      })
+    case 403: // 403 权限不足
+      Toast(response.data.msg);
       break;
 
-    case 400:
-      Toast()
+    case 500: //服务器内部错误
+      Toast(response.data.msg);
       break;
 
     default:

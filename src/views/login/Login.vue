@@ -8,7 +8,7 @@
       </div>
       <div class="form-item">
         <label>密　码：</label>
-        <input type="text" v-model="formInputData.password" name="password"/>
+        <input type="password" v-model="formInputData.password" name="password"/>
       </div>
       <div class="form-item">
         <label>验证码：</label>
@@ -34,8 +34,8 @@
     data() {
       return {
         formInputData:{
-          username:'',
-          password:'',
+          username:'18779031201',
+          password:'123',
         },
         tips:''
       }
@@ -43,6 +43,7 @@
     watch: {},
     methods: {
       formSub(event){
+        this.tips = '';//清空提示
         console.log(event);
         // console.log(event.target.elements.tel.value);
         // console.log(event.target.elements.password.value);
@@ -56,6 +57,28 @@
         //开始请求登录接口
         HttpRequest('/login/login','post',this.formInputData).then(res=>{
           console.log(res);
+          //将token存入localStorage中
+          // this.$store.dispatch('setLoginStatus',res.data.token);
+          //跳转页面
+          // console.log('存入');
+
+          if(res.code != 200){
+            this.$toast(res.msg);
+          }else{
+            localStorage.setItem('userToken',res.data.token);
+
+            //判断有没有要跳转的路由
+            let path = this.$route.query.redirect ? this.$route.query.redirect : '/home';
+
+            this.$toast('登录成功，正在跳转...');
+
+            setTimeout(()=>{
+              this.$router.replace(path);
+            },1000)
+
+          }
+        }).catch(error=>{
+          console.log(error);
         })
       }
     },
@@ -85,7 +108,12 @@
     .form-item{
       padding: 10px 10px 0px;
 
-      input[type=text]{
+      input[type=text] {
+        border: none;
+        border-bottom: #d8d8d8 1px solid;
+      }
+
+      input[type=password]{
         border: none;
         border-bottom: #d8d8d8 1px solid;
       }

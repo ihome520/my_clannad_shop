@@ -16,5 +16,11 @@ module.exports = {
       .set('lib',resolve('src/lib'))
       .set('api',resolve('src/api'))
       .set('config',resolve('src/config'))
-  }
+  },
+  // proxyTable: {
+  //   '^/api': {
+  //     target: 'https://wx.17hxg.com/api',  // 目标接口域名
+  //     changeOrigin: true,  // 是否跨域
+  //   },
+  // },
 }

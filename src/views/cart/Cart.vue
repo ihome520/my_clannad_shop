@@ -5,8 +5,20 @@
 </template>
 
 <script>
+  import {AuthRequest} from "@/api/api";
+
   export default {
-    name: "Cart"
+    name: "Cart",
+    mounted() {
+      this.getCartList() //获取购物车列表
+    },
+    methods: {
+      getCartList() {
+        AuthRequest('/cart/index').then(res => {
+          console.log(res);
+        })
+      }
+    }
   }
 </script>
 

@@ -6,12 +6,14 @@
         <div class="goods-box">
           <template v-if="goodsList.length > 0">
             <div class="goods-item" v-for="(item,index) in goodsList" :key="index">
-              <img :src="item.thumb" @load="imgLoad"/>
-              <div>
-                <span>{{ item.goods_name }}</span>
-                <div class="price">￥{{ item.price }}</div>
-                <i></i>
-              </div>
+              <router-link :to="/goods/ + item.id">
+                <img :src="item.thumb" @load="imgLoad"/>
+                <div>
+                  <span>{{ item.goods_name }}</span>
+                  <div class="price">￥{{ item.price }}</div>
+                  <i></i>
+                </div>
+              </router-link>
             </div>
           </template>
           <template v-else>

@@ -4,6 +4,9 @@ import router from './router'
 import store from './store'
 import FastClick from 'fastclick'
 
+//导入核心公共方法
+import utils from './lib/utils'
+
 FastClick.attach(document.body);//移动端300ms延时解决
 
 import {
@@ -23,6 +26,7 @@ Vue.use(Button).use(ImagePreview).use(Toast).use(Dialog).use(Popup)
 Vue.prototype.$toast = Toast
 Vue.prototype.$dialog = Dialog
 Vue.prototype.$imagePreview = ImagePreview
+Vue.prototype.$utils = utils //核心公共方法
 
 Vue.config.productionTip = false
 

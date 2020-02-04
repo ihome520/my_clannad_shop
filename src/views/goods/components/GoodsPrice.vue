@@ -1,7 +1,8 @@
 <template>
   <div class="goods_price">
     <div class="price">
-      <span class="left">￥{{ goods_price }}</span>
+      <span class="left" v-show="!select_goods_price">￥{{ goods_price }}</span>
+      <span class="left" v-show="select_goods_price">￥{{ select_goods_price }}</span>
       <span class="right">
         <van-icon name="star-o" />
         <div>收藏</div>
@@ -31,6 +32,10 @@
         default() {
           return [];
         }
+      },
+      select_goods_price:{
+        type:String,
+        default:''
       }
     },
     data(){
@@ -59,7 +64,7 @@
           this.goods_price = prices.shift() + '~' + prices.pop();
         },
         deep:true
-      }
+      },
     },
     filter:{
 

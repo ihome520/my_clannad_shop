@@ -3,10 +3,14 @@ export default {
     token:'',
   },
   actions:{
-
+    setLoginStatus(context,token){
+      context.commit('SET_LOGIN',token);
+    }
   },
   mutations:{
-
+    SET_LOGIN(state,token){
+      state.token = token;
+    }
   },
   getters:{
     /**
