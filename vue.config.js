@@ -17,10 +17,34 @@ module.exports = {
       .set('api',resolve('src/api'))
       .set('config',resolve('src/config'))
   },
-  // proxyTable: {
-  //   '^/api': {
-  //     target: 'https://wx.17hxg.com/api',  // 目标接口域名
-  //     changeOrigin: true,  // 是否跨域
-  //   },
+  // devSever:{
+  //   open:true,
+  //   prot:8082,
+  //   host:'127.0.0.1',
+    //设置代理
+    // proxyTable: {
+    //   '^/api': {
+    //     target: 'https://wx.17hxg.com/api',  // 目标接口域名
+    //     changeOrigin: true,  // 是否跨域
+    //        pathReWrite:{
+    //           '^/api':''
+    //        }
+    //   },
+    // },
+  // }
+  // css: {
+  //   loaderOptions: {
+  //     css: {},
+  //     postcss: {
+  //       plugins: [
+  //         require('postcss-px2rem')({
+  //           remUnit: 75
+  //         })
+  //       ]
+  //     }
+  //   }
   // },
+  publicPath:'./',
+  outputDir:'dist',
+  assetsDir:'static'
 }

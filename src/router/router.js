@@ -49,6 +49,14 @@ export default [
     }
   },
   {
+    path:'/order_confirm',
+    name:'order_confirm',
+    component:() => import('views/order_comfirm/OrderConfirm.vue'),
+    meta:{
+      fullScreen:true
+    }
+  },
+  {
     path: '*',
     component: () => import('views/errors/NotFound.vue'),
     meta:{

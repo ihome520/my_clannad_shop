@@ -1,6 +1,6 @@
 <template>
   <van-tabbar v-model="active">
-    <van-tabbar-item v-for="(item,index) in tabbar" :key="index" :to="item.path"
+    <van-tabbar-item class="nav_bar_item" v-for="(item,index) in tabbar" :key="index" :to="item.path"
                      :icon="item.icon">{{ item.name }}
     </van-tabbar-item>
   </van-tabbar>
@@ -67,5 +67,7 @@
 </script>
 
 <style scoped>
-
+  .nav_bar_item{
+    font-size: 16px;
+  }
 </style>

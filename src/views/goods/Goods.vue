@@ -3,7 +3,10 @@
     <van-nav-bar title="商品详情" left-text="返回" left-arrow @click-left="onClickLeft"/>
     <goods-swiper :album="goods_album"/>
     <goods-price :goods="goods" :goods_inventory="goods_inventory" :select_goods_price="select_goods_price"/>
-    <goods-attr :goods_spec="goods_spec" :goods_inventory="goods_inventory" @changeSelectSpec="changeSelectSpec"/>
+    <goods-attr :goods_spec="goods_spec" :goods_inventory="goods_inventory"
+                @changeSelectSpec="changeSelectSpec"
+                @changeGoodsNumber="changeGoodsNumber"
+    />
     <goods-detail :content="goods.description"/>
     <goods-buy :disabled_buy="disabled_buy" @addToCart="addToCart" @buyGoods="buyGoods"/>
   </div>
@@ -63,14 +66,13 @@
     },
     methods: {
       onClickLeft() {
-        this.$router.push('/category');
+        this.$router.back(-1);
       },
       /**
        * 选中的属性
        * @param skuData
        */
       changeSelectSpec(skuData) {
-        console.log(skuData);
         this.choose_spec = skuData.choose_spec; //已经选中的sku
         this.goods_num = skuData.goods_num;//商品数量
 
@@ -93,6 +95,9 @@
           this.select_goods_price = '';//没有全选中属性
           this.disabled_buy = false;
         }
+      },
+      changeGoodsNumber(goods_num){
+        this.goods_num = goods_num;
       },
       /**
        * 加购

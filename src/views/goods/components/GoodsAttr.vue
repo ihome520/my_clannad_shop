@@ -12,7 +12,7 @@
     </div>
     <div class="bay_num">
       <span>购买数量：</span>
-      <van-stepper v-model="goods_num"  min="1" max="5000" />
+      <van-stepper v-model="goods_num" @change="changeGoodsNumber" min="1" max="5000" />
     </div>
   </div>
 </template>
@@ -143,6 +143,9 @@
 
         this.$forceUpdate(); //重绘
       },
+      changeGoodsNumber(){
+        this.$emit('changeGoodsNumber',this.goods_num)
+      }
     }
   }
 

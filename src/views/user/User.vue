@@ -1,12 +1,21 @@
 <template>
   <div class="user">
-    用户页面
+    <van-nav-bar title="用户个人中心">
+      <van-icon class="setting_icon" name="setting-o" slot="right" />
+    </van-nav-bar>
+    <user-info/>
   </div>
 </template>
 
 <script>
+  import {AuthRequest} from "api/api";
+  import UserInfo from "./components/UserInfo";
+
   export default {
     name: "User",
+    components:{
+      UserInfo
+    },
     data(){
       return {
 
@@ -29,6 +38,8 @@
   }
 </script>
 
-<style scoped>
-
+<style scoped lang="less">
+  .setting_icon{
+    touch-action: none;
+  }
 </style>

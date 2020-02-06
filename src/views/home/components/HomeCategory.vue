@@ -34,7 +34,8 @@
     flex-wrap: wrap;
 
     .category-item {
-      width: 25%;
+      width: 20%;
+      font-size: 16px;
 
       img {
         width: 70px;
