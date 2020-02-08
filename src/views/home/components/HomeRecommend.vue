@@ -8,20 +8,17 @@
             <div class="goods-item" v-for="(item,index) in goodsList" :key="index">
               <router-link :to="/goods/ + item.id">
                 <img :src="item.thumb" @load="imgLoad"/>
-                <div>
-                  <span class="goods_name">{{ item.goods_name }}</span>
+
+                  <div class="goods_name">{{ item.goods_name }}</div>
                   <div class="price">￥{{ item.price }}</div>
-                  <i></i>
-                </div>
               </router-link>
             </div>
           </template>
           <template v-else>
-            <div class="no-data">
+            <!--<div class="no-data">
               <p>没有数据...</p>
-            </div>
+            </div>-->
           </template>
-
         </div>
       </van-tab>
     </van-tabs>
@@ -84,6 +81,7 @@
 
       .goods_name{
         font-size: 16px;
+        color: #606060;
       }
 
       .price {
@@ -106,5 +104,6 @@
     text-align: center;
     margin: 0 auto;
     height: 215px;
+    font-size: 14px;
   }
 </style>

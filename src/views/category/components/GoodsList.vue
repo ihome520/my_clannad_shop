@@ -13,7 +13,7 @@
         <router-link :to="'/goods/' + item.id">
           <img :src="item.thumb" @load="imgLoad"/>
           <div>
-            <span>{{ item.goods_name }}</span>
+            <span class="goods_name">{{ item.goods_name }}</span>
             <div class="price">￥{{ item.price }}</div>
             <i></i>
           </div>
@@ -118,8 +118,13 @@
         width: 100%;
       }
 
+      .goods_name{
+        color: #606060;
+      }
+
       .price {
         text-align: center;
+        color: red;
       }
     }
 

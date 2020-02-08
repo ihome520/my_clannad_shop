@@ -7,6 +7,7 @@ import router from '@/router'
 const instance = axios.create();
 
 instance.defaults.baseURL = 'https://wx.17hxg.com/api';
+// instance.defaults.baseURL = 'http://www.66.com/index.php/api';
 instance.defaults.timeout = 30000;
 
 // 添加请求拦截器

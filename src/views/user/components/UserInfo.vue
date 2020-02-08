@@ -1,15 +1,44 @@
 <template>
   <div class="user_info">
     <div class="header">
-      <img src="https://wx.17hxg.com/uploads/goods/20200115/15790790995e1ed5bb1a356.jpg" class="thumb"/>
-      <div class="header_right">
-        <div class="user_name">
-          <span>宫泽有纪宁</span>
-          &nbsp;
-          <van-tag round type="success">采购达人</van-tag>
+      <div class="user">
+        <img src="https://wx.17hxg.com/uploads/goods/20200115/15790790995e1ed5bb1a356.jpg" class="thumb"/>
+        <div class="header_right">
+          <div class="user_name">
+            <span>宫泽有纪宁</span>
+            &nbsp;
+            <van-tag round type="success">采购达人</van-tag>
+          </div>
+          <div class="tel">Tel:18779031201</div>
         </div>
-        <div class="tel">Tel:18779031201</div>
       </div>
+
+      <ul class="other">
+        <router-link to="/">
+          <li>
+            <span>45</span>
+            <span>收藏夹</span>
+          </li>
+        </router-link>
+        <router-link to="/">
+          <li>
+            <span>45</span>
+            <span>足迹</span>
+          </li>
+        </router-link>
+        <router-link to="/">
+          <li>
+            <span>45</span>
+            <span>优惠券</span>
+          </li>
+        </router-link>
+        <router-link to="/">
+          <li>
+            <span>45</span>
+            <span>红包</span>
+          </li>
+        </router-link>
+      </ul>
     </div>
   </div>
 </template>
@@ -36,35 +65,67 @@
 </script>
 
 <style scoped lang="less">
-  .user_info{
+  .user_info {
     padding: 2%;
   }
-  .header{
+
+  .header {
     display: flex;
+    flex-direction: column;
     border: #d6d9da 1px solid;
     border-radius: 5px;
     padding: 10px;
     background-color: #b5ec9e;
 
-    .thumb{
-      width: 80px;
-      height: 80px;
-      border-radius: 50%;
-      border: #e0a1b9 5px dashed;
-    }
-
-    .header_right{
+    .user {
       display: flex;
-      flex-direction: column;
-      justify-content: space-around;
-      width: 100%;
-      margin-left: 10px;
-      .user_name{
-        font-size: 22px;
+
+      .thumb {
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        border: #e0a1b9 3px dashed;
       }
 
-      .tel{
-        font-size: 16px;
+      .header_right {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-around;
+        width: 100%;
+        margin-left: 10px;
+
+        .user_name {
+          font-size: 22px;
+        }
+
+        .tel {
+          font-size: 16px;
+        }
+      }
+    }
+
+
+    .other {
+      display: flex;
+      justify-content: space-around;
+      text-align: center;
+      margin-top: 10px;
+
+      li {
+        display: flex;
+        flex-direction: column;
+
+        span:nth-child(1) {
+          font-size: 22px;
+          color: #606060;
+        }
+
+        span:nth-child(2) {
+          font-size: 14px;
+          margin-top: 5px;
+          color: #000;
+        }
+
       }
     }
   }

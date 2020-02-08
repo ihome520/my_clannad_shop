@@ -22,6 +22,7 @@
     <div class="main-page-wrapper">
       <view-scroll :onLoadMore="onLoadMore" :enableLoadMore="enableLoadMore">
         <home-swiper :banner="banner"/>
+        <van-notice-bar :text="nofify_text" left-icon="volume-o" />
         <!--主分类-->
         <home-category :category="category"/>
         <!--秒杀专场 待准备-->
@@ -67,6 +68,7 @@
         goodsList: [],
         noData: false,
         enableLoadMore: true,
+        nofify_text:'按照风格，系列批量下载，有六种配色风格，需要付费，98美元无线下载。免费下载只有三个系列，网站会将下载地址发到你的邮箱',
       }
     },
     mounted() {
@@ -121,10 +123,10 @@
         })
       },
       //加载更多
-      getMoreGoods() {
+      async getMoreGoods() {
         if (!this.noData) {
           this.$toast('加载中...');
-          HttpRequest('/home/goods', 'get', {
+          await HttpRequest('/home/goods', 'get', {
             'page': this.cur_page + 1,
             'category_id': this.currentCategory
           }).then(res => {
@@ -163,8 +165,9 @@
   .no-data {
     text-align: center;
     position: relative;
-    bottom: 50px;
+    bottom: 30px;
     color: #c2d0d0;
+    font-size: 14px;
   }
 
 </style>

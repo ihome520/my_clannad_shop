@@ -35,12 +35,17 @@
 
     .category-item {
       width: 20%;
-      font-size: 16px;
+      font-size: 14px;
+
+      a{
+        color: #606060;
+      }
 
       img {
-        width: 70px;
-        height: 70px;
+        width: 60px;
+        height: 60px;
         margin-bottom: 5px;
+        border-radius: 50%;
       }
     }
   }

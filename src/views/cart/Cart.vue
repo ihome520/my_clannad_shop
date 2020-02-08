@@ -77,9 +77,9 @@
           if(newValue.length > 0){
             this.totalPrice = 0;
             let singlePrice = 0.00;
-            this.cartList.forEach(item => {
+            this.cartList.forEach((item,index) => {
               if(newValue.includes(item.id)){
-                singlePrice += parseFloat(item.price) * item.number
+                singlePrice += parseFloat(item.price) * this.numberKv[index]
               }
             })
 
@@ -92,6 +92,8 @@
       },
       cartList: {
         handler(newValue, oldValue) {
+          this.numberKv = []; //如果删除了购物车，那么这里要先清空
+          this.cartKv = [];
           newValue.forEach(item => {
             this.numberKv.push(item.number);
             this.cartKv.push(item.id); //购物车对应的id
@@ -125,6 +127,21 @@
         } else {
           this.numberKv[index]--;
           this.changeCartNumber(this.cartKv[index], 2);
+        }
+
+        //计算总价格
+        if(this.selectItem.length > 0){
+          this.totalPrice = 0;
+          let singlePrice = 0.00;
+          this.cartList.forEach((item,index) => {
+            if(this.selectItem.includes(item.id)){
+              singlePrice += parseFloat(item.price) * this.numberKv[index]
+            }
+          })
+
+          this.totalPrice = singlePrice * 100
+        }else{
+          this.totalPrice = 0;
         }
       },
       /**
@@ -185,11 +202,21 @@
           this.cartList = res.data;
         })
       }
+    },
+    beforeCreate () {
+      // document.querySelector('body').setAttribute('style', 'background-color:#eaeaea')
+    },
+    beforeDestroy () {
+      // document.querySelector('body').removeAttribute('style')
     }
   }
 </script>
 
 <style scoped lang="less">
+  .cart{
+    height: 100vh;
+    background-color: #eaeaea;
+  }
   .cart_group {
     padding: 5px;
   }
@@ -208,6 +235,7 @@
     border-radius: 5px;
     padding: 5px;
     margin-bottom: 3px;
+    background-color: #fff;
 
     img {
       margin-top: 5px;
@@ -215,7 +243,6 @@
       height: 80px;
       border-radius: 5px;
       margin-left: 8px;
-      border: silver 2px solid;
     }
 
     .goods_info {
@@ -232,6 +259,7 @@
 
       .sku_info {
         font-size: 14px;
+        color: #8c9096;
         padding: 3px 0px;
       }
 

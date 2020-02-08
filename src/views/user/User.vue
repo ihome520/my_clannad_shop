@@ -4,17 +4,20 @@
       <van-icon class="setting_icon" name="setting-o" slot="right" />
     </van-nav-bar>
     <user-info/>
+    <my-orders/>
   </div>
 </template>
 
 <script>
   import {AuthRequest} from "api/api";
   import UserInfo from "./components/UserInfo";
+  import MyOrders from "./components/MyOrders";
 
   export default {
     name: "User",
     components:{
-      UserInfo
+      UserInfo,
+      MyOrders
     },
     data(){
       return {

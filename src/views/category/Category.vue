@@ -134,7 +134,7 @@
       /**
        * 加载更多
        */
-      loadMore() {
+      async loadMore() {
         if(this.isLoading == false){
           console.log('loadmore');
 
@@ -144,7 +144,7 @@
                 message:'加载中...',
                 forbidClick:true
               })
-              HttpRequest('category/goods','get',{
+            await HttpRequest('category/goods','get',{
                 category_id:this.currCategoryId,
                 page:this.nextPage,
                 sort:this.sort,
