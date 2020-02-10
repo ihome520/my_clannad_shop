@@ -2,14 +2,14 @@
   <div class="user_info">
     <div class="header">
       <div class="user">
-        <img src="https://wx.17hxg.com/uploads/goods/20200115/15790790995e1ed5bb1a356.jpg" class="thumb"/>
+        <img :src="user_info.thumb" class="thumb"/>
         <div class="header_right">
           <div class="user_name">
-            <span>宫泽有纪宁</span>
+            <span>{{ user_info.nick_name }}</span>
             &nbsp;
-            <van-tag round type="success">采购达人</van-tag>
+            <van-tag round type="success">购物达人</van-tag>
           </div>
-          <div class="tel">Tel:18779031201</div>
+          <div class="tel">Tel: {{ user_info.tel }}</div>
         </div>
       </div>
 
@@ -47,7 +47,14 @@
   export default {
     name: "UserInfo",
     components: {},
-    props: {},
+    props: {
+      user_info:{
+        type:Object,
+        default(){
+          return {}
+        }
+      }
+    },
     data() {
       return {}
     },
@@ -80,7 +87,7 @@
     .user {
       display: flex;
 
-      .thumb {
+      .thumb{
         width: 80px;
         height: 80px;
         border-radius: 50%;
@@ -91,7 +98,6 @@
         display: flex;
         flex-direction: column;
         justify-content: space-around;
-        width: 100%;
         margin-left: 10px;
 
         .user_name {

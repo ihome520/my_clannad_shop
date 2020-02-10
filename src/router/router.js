@@ -53,6 +53,34 @@ export default [
     name:'order_confirm',
     component:() => import('views/order_comfirm/OrderConfirm.vue'),
     meta:{
+      requireAuth: true,
+      fullScreen:true
+    }
+  },
+  {
+    path:'/order_pay',
+    name:'order_pay',
+    component:() => import('views/order_pay/OrderPay.vue'),
+    meta:{
+      requireAuth: true,
+      fullScreen:true
+    }
+  },
+  {
+    path:'/order_list/:type',
+    name:'order_list',
+    component:() => import('views/order_list/OrderList.vue'),
+    meta:{
+      requireAuth: true,
+      fullScreen:true
+    }
+  },
+  {
+    path:'/order_detail/:order_sn',
+    name:'order_detail',
+    component:() => import('views/order_detail/OrderDetail.vue'),
+    meta:{
+      requireAuth: true,
       fullScreen:true
     }
   },

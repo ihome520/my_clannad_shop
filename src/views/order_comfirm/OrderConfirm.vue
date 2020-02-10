@@ -9,7 +9,7 @@
       <div class="total_price" slot="default">
         合计：<span>￥{{ total_price }} 元</span>
       </div>
-      <van-goods-action-button class="submit_btn" type="danger" text="提交订单" @click="sumbitOrder" />
+      <van-goods-action-button :loading="sumbiting" class="submit_btn" type="danger" text="提交订单" @click="sumbitOrder" />
     </van-goods-action>
   </div>
 </template>
@@ -30,11 +30,12 @@
       return {
         cart_ids: 0,
         user_address: [],
+        sumbiting:false,//提交状态
         cart_list:[],
         user_addr_id:0,//当前选中的地址id
         express_type:1,//快递配送类型 1是快递 2是自提
         total_price:0,
-        remarks:'',//备注
+        remark:'',//备注
       }
     },
     watch: {
@@ -89,10 +90,33 @@
         this.total_price = price;
       },
       setRemarks(remarks){
-        this.remarks = remarks;
+        this.remark = remarks;
       },
+      /**
+       * 提交订单
+       */
       sumbitOrder(){
-
+        this.sumbiting = true;
+        AuthRequest('/cart/confirmOrder','post',{
+          user_addr_id:this.user_addr_id,
+          cart_ids:this.cart_ids,
+          remark:this.remark,
+          express_type:this.express_type
+        }).then(res=>{
+          console.log(res);
+          if(res.code != 200){
+            this.sumbiting = false
+            this.$toast(res.msg);
+          }else{
+            //跳转到支付页面
+            this.$router.replace({
+              path:'/order_pay',
+              query:{order_sn:res.data.order_sn}
+            })
+          }
+        }).catch(err=>{
+          this.sumbiting = false
+        })
       }
     },
 

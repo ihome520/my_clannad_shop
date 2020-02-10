@@ -2,39 +2,39 @@
   <div class="my_orders">
     <div class="container">
       <div class="header">
-        <span>我的</span>
-        <router-link to="/">
+        <span>我的订单</span>
+        <router-link to="/order_list/all">
           查看更多 >>>
         </router-link>
       </div>
       <ul class="servers">
-        <router-link to="/">
+        <router-link to="/order_list/0">
           <li>
-            <van-icon size="45" info="99" color="#000" name="credit-pay"/>
+            <van-icon size="45" :info="order_info.not_pay" color="#000" name="credit-pay"/>
             <span>待付款</span>
           </li>
         </router-link>
-        <router-link to="/">
+        <router-link to="/order_list/1">
           <li>
-            <van-icon size="45" info="99" color="#000" name="paid"/>
+            <van-icon size="45" :info="order_info.not_send" color="#000" name="paid"/>
             <span>待发货</span>
           </li>
         </router-link>
-        <router-link to="/">
+        <router-link to="/order_list/2">
           <li>
-            <van-icon size="45" info="99" color="#000" name="logistics"/>
+            <van-icon size="45" :info="order_info.already_send" color="#000" name="logistics"/>
             <span>待收货</span>
           </li>
         </router-link>
-        <router-link to="/">
+        <router-link to="/order_list/3">
           <li>
-            <van-icon size="45" info="99" color="#000" name="other-pay"/>
+            <van-icon size="45" :info="order_info.not_comment" color="#000" name="other-pay"/>
             <span>待评价</span>
           </li>
         </router-link>
-        <router-link to="/">
+        <router-link to="/order_list/4">
           <li>
-            <van-icon size="45" info="99" color="#000" name="flower-o"/>
+            <van-icon size="45" :info="order_info.after_server" color="#000" name="flower-o"/>
             <span>售后</span>
           </li>
         </router-link>
@@ -47,7 +47,14 @@
   export default {
     name: "MyOrders",
     components: {},
-    props: {},
+    props: {
+      order_info:{
+        type:Object,
+        default(){
+          return {}
+        }
+      }
+    },
     data() {
       return {}
     },

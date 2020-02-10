@@ -1,7 +1,7 @@
 <template>
   <div class="home">
     <!--search-->
-    <search/>
+    <search class="search_bar" maxlength="20"/>
     <!--<div class='container' v-infinite-scroll="loadMore"
          infinite-scroll-distance="50"
          infinite-scroll-immediate-check="false">
@@ -152,6 +152,10 @@
 <style scoped>
   .home{
     height: 100vh;
+  }
+
+  .search_bar >>> div{
+    font-size: 16px;
   }
 
   .main-page-wrapper {

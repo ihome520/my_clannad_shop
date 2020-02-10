@@ -94,6 +94,7 @@
 
 <style scoped lang="less">
   .title {
+    font-size: 20px;
     text-align: center;
     background-color: #cccccc;
     margin: 0;
@@ -101,6 +102,7 @@
   }
 
   form {
+    font-size: 16px;
     display: flex;
     flex-direction: column;
     padding: 0px 20px 0px 20px ;

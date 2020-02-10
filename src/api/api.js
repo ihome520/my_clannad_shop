@@ -98,12 +98,14 @@ instance.interceptors.response.use(function (response) {
 
     case 401: // 未认证
       Toast({
-        message: '请先登录',
+        message: '登录已经过期，请重新登录账号',
         duration: 1500
       })
 
       setTimeout(() => {
-        router.push('/login');
+        router.replace({
+          path:'/login',
+        });
       }, 1500)
       break;
 

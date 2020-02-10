@@ -3,8 +3,8 @@
     <van-nav-bar title="用户个人中心">
       <van-icon class="setting_icon" name="setting-o" slot="right" />
     </van-nav-bar>
-    <user-info/>
-    <my-orders/>
+    <user-info :user_info="user_info"/>
+    <my-orders :order_info="order_info"/>
   </div>
 </template>
 
@@ -21,7 +21,8 @@
     },
     data(){
       return {
-
+        user_info:{},
+        order_info:{}
       }
     },
     mounted(){
@@ -30,12 +31,18 @@
     methods:{
       //检查是否有token，如果没有，表示没有登录
       getUserInfo(){
-        // let token = this.$store.state.user.token;
-        //
-        // if(!token){ //未登录
-        //   this.$router.replace('/login');
-        // }
-        console.log(this.$router.currentRoute);
+
+        AuthRequest('/user/index').then(res=>{
+          if(res.code != 200){
+            this.$toast(res.msg);
+            setTimeout(()=>{
+              this.$route.replace('/home');
+            },1500)
+          }else{
+            this.user_info = res.data.user_info;
+            this.order_info = res.data.order_info;
+          }
+        })
       }
     }
   }

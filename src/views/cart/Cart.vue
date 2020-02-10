@@ -38,6 +38,7 @@
 
     <van-submit-bar class="submit_area"
                     :price="totalPrice"
+                    :loading="sumbiting"
                     button-text="立即结算"
                     @submit="submitOrder"
     >
@@ -58,7 +59,8 @@
         checkAllSelect: false,
         numberKv: [],//库存绑定的键值对
         cartKv: [],//购物车库存更新用的键值对 用number的key去对应购物车id
-        totalPrice:0
+        totalPrice:0,
+        sumbiting:false,//订单提交状态
       }
     },
     mounted() {
@@ -162,8 +164,8 @@
        * 提交订单
        */
       submitOrder() {
+        this.sumbiting = true;
         if(this.selectItem.length > 0){
-          console.log('提交订单,跳转到新页面');
           let cart_ids = this.selectItem.toString();
 
           this.$router.push({
@@ -172,6 +174,7 @@
           })
         }else{
           this.$toast('请选择要结算的商品')
+          this.sumbiting = false;
         }
       },
       /**

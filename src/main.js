@@ -13,14 +13,16 @@ FastClick.attach(document.body);//移动端300ms延时解决
 import {
   Button, Toast, Dialog, Tag, Tabbar, TabbarItem, Icon,Popup,
   Swipe, SwipeItem, Search, Lazyload, Picker, Tab, Tabs, TreeSelect,Checkbox,CheckboxGroup,
-  Grid, GridItem,NavBar,Stepper,GoodsAction, GoodsActionIcon, GoodsActionButton,SwipeCell,SubmitBar,NoticeBar
+  Grid, GridItem,NavBar,Stepper,GoodsAction, GoodsActionIcon, GoodsActionButton,SwipeCell,SubmitBar,NoticeBar,
+  PasswordInput, NumberKeyboard
 } from 'vant' //引入vantUI库
 
 Vue.use(Button).use(Toast).use(Dialog).use(Tag).use(Popup)
   .use(Tabbar).use(TabbarItem).use(Icon).use(Swipe).use(SwipeItem)
   .use(Search).use(Lazyload).use(Picker).use(Tab).use(Tabs).use(TreeSelect)
   .use(Grid).use(GridItem).use(NavBar).use(Stepper).use(GoodsAction).use(GoodsActionButton)
-  .use(GoodsActionIcon).use(Checkbox).use(CheckboxGroup).use(SwipeCell).use(SubmitBar).use(NoticeBar); //引用组件
+  .use(GoodsActionIcon).use(Checkbox).use(CheckboxGroup).use(SwipeCell).use(SubmitBar).use(NoticeBar)
+  .use(PasswordInput).use(NumberKeyboard); //引用组件
 
 
 //挂载组件

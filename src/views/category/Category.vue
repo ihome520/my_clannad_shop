@@ -1,8 +1,9 @@
 <template>
   <div class="category">
-    <search/>
+    <van-nav-bar title="分类大全" fixed/>
     <van-tree-select
-      height="100vh"
+      class="tree_select"
+      height="100vh - 50px"
       :items="category"
       :main-active-index="category.id"
       :main-active-index.sync="activeIndex"
@@ -225,10 +226,18 @@
   }
 </script>
 
-<style scoped lang="less">
+<style scoped>
+  .tree_select{
+    position: absolute;
+    top: 46px;
+    bottom: 50px;
+    width: 100%;
+    left: 0;
+  }
   .category-goods {
     height: 100vh;
     position: relative;
+
   }
 
   .container {

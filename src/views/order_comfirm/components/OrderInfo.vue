@@ -22,7 +22,7 @@
       <div class="express_info">
         <div class="express_type">
           <span>配送方式:</span>
-          <span @click="selectExpress">快递运送 ></span>
+          <span @click="selectExpress">{{ express_value }} ></span>
         </div>
         <div class="remark">
           <label>
@@ -66,6 +66,7 @@
         showPicker: false,
         expressList: ['快递配送', '自提'],
         expressListKv:[1,2],
+        express_value:'快递配送',
         express_type:1,
         total_goods:0,
         total_price:0.00,
@@ -94,6 +95,7 @@
        */
       onConfrimExpress(value,index){
         this.showPicker = false;
+        this.express_value = value;//显示配送方式名称
         this.express_type = this.expressListKv[index];
         this.calcGoods(this.cart_list);//重新计算价格
         this.$emit('changeExpress',this.expressListKv[index]);
