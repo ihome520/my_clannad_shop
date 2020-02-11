@@ -111,6 +111,9 @@
           flex-direction: column;
           font-size: 16px;
 
+          /*div{*/
+          /*  font-size: 14px;*/
+          /*}*/
           span{
             color: #606060;
           }

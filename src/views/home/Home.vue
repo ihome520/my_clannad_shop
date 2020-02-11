@@ -125,7 +125,9 @@
       //加载更多
       async getMoreGoods() {
         if (!this.noData) {
-          this.$toast('加载中...');
+          this.$toast.loading({
+            message:'加载中...'
+          })
           await HttpRequest('/home/goods', 'get', {
             'page': this.cur_page + 1,
             'category_id': this.currentCategory
@@ -141,7 +143,6 @@
             } else {
               this.noData = true;
             }
-
           })
         }
       }

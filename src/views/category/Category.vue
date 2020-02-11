@@ -137,14 +137,11 @@
        */
       async loadMore() {
         if(this.isLoading == false){
-          console.log('loadmore');
-
           if(this.noData == false){ //有数据的时候才加载
             this.isLoading = true; //把加载状态设置为true 防止重复加载
-            this.$toast({
-                message:'加载中...',
-                forbidClick:true
-              })
+            this.$toast.loading({
+              message:'加载中...'
+            })
             await HttpRequest('category/goods','get',{
                 category_id:this.currCategoryId,
                 page:this.nextPage,

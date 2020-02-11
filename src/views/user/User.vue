@@ -1,7 +1,7 @@
 <template>
   <div class="user">
     <van-nav-bar title="用户个人中心">
-      <van-icon class="setting_icon" name="setting-o" slot="right" />
+      <van-icon class="setting_icon" size="20" name="setting-o" @click="toSetting" slot="right" />
     </van-nav-bar>
     <user-info :user_info="user_info"/>
     <my-orders :order_info="order_info"/>
@@ -29,9 +29,11 @@
       this.getUserInfo();
     },
     methods:{
+      toSetting(){
+        this.$router.replace('/setting');//进入设置
+      },
       //检查是否有token，如果没有，表示没有登录
       getUserInfo(){
-
         AuthRequest('/user/index').then(res=>{
           if(res.code != 200){
             this.$toast(res.msg);

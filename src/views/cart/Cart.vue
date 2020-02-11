@@ -149,9 +149,9 @@
       /**
        * 更改购物车数量 后端请求
        */
-      changeCartNumber(cart_id, type) {
+      async changeCartNumber(cart_id, type) {
         this.$toast.loading();
-        AuthRequest('/cart/changeCartNumber', 'post', {id: cart_id, type}).then(res => {
+        await AuthRequest('/cart/changeCartNumber', 'post', {id: cart_id, type}).then(res => {
           if(res.code != 200){
             this.$toast(res.msg);
           }

@@ -16,8 +16,14 @@
           <div class="order_list_item" v-for="(item,index) in order_list" :key="index">
             <div class="list_box">
               <div class="header">
-                <span>订单号: {{ item.order_sn }}</span>
-                <span>{{ item.created_at }}</span>
+                <div class="merchant_name">
+                  <van-icon name="shop-o" size="20" />
+                  <div>将军府冠捷旗舰店</div>
+                </div>
+                <div class="order_sn">
+                  <span>订单号: {{ item.order_sn }}</span>
+                  <span>{{ item.created_at }}</span>
+                </div>
               </div>
               <div class="content">
                 <order-goods-list  @imgLoad="imgLoad" :goods_list="item.order_info"/>
@@ -33,12 +39,15 @@
                   <van-button plain size="small" type="danger" @click="delOrder(item.order_sn)">删除订单</van-button>
                 </template>
                 <template v-else-if="item.status == '2'">
+                  <van-button plain size="small" type="warning">查看物流</van-button>
                   <van-button plain size="small" type="primary">确认收货</van-button>
                 </template>
                 <template v-else-if="item.status == '3'">
+                  <van-button plain size="small" type="warning">查看物流</van-button>
                   <van-button plain size="small" type="primary">去评价</van-button>
                 </template>
                 <template v-else-if="item.status == '4'">
+                  <van-button plain size="small" type="warning">查看物流</van-button>
                   <van-button plain size="small" type="default">申请售后</van-button>
                   <van-button plain size="small" type="danger">删除订单</van-button>
                 </template>
@@ -126,6 +135,8 @@
         this.not_data = false;
 
         this.getOrderList();
+        // this.$router.replace('/order_list/' + type);
+        // this.$router.go(0);
       },
       async getOrderList() {
         this.$toast.loading({
@@ -203,8 +214,7 @@
   .order_list_box {
     height: 100vh;
     position: relative;
-    top: 0px;
-
+    top: 0;
 
     .container {
       position: absolute;
@@ -214,7 +224,6 @@
       width: 100%;
       overflow: hidden;
       background-color: #cccccc;
-      padding-top: 10px;
 
       .order_list_item {
         padding: 0 2% 2% 2%;
@@ -227,8 +236,20 @@
           .header {
             display: flex;
             font-size: 16px;
-            justify-content: space-between;
+            flex-direction: column;
             padding-bottom: 10px;
+
+            .merchant_name{
+              display: flex;
+              align-items: center;
+              padding-bottom: 5px;
+              color: #868686;
+            }
+
+            .order_sn{
+              display: flex;
+              justify-content: space-between;
+            }
           }
 
           .content {
