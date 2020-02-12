@@ -8,7 +8,7 @@ const instance = axios.create();
 
 instance.defaults.baseURL = 'https://wx.17hxg.com/api';
 // instance.defaults.baseURL = 'http://www.66.com/index.php/api';
-instance.defaults.timeout = 1000;
+instance.defaults.timeout = 30000;
 
 // 添加请求拦截器
 instance.interceptors.request.use(function (config) {
@@ -77,8 +77,10 @@ const AuthRequest = (url, method = 'get', params = {}, file = false) => {
 
   if (method == 'get') {
     config.params = params;
-  } else if (method == 'post') {
+  } else if (method == 'post' && !file) {
     config.data = Qs.stringify(params);
+  }else if (method == 'post' && file){ //上传文件时，不可加入这个QS
+    config.data = params;
   }
 
   return instance.request(config);

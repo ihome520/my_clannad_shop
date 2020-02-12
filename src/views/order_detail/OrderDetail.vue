@@ -21,7 +21,7 @@
     </div>
     <div class="address">
       <div class="address_left">
-        <van-icon size="46" name="location" />
+        <van-icon size="46" name="location-o" />
       </div>
       <div class="address_right">
         <div>

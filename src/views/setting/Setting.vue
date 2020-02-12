@@ -4,7 +4,7 @@
     <div class="content">
       <div class="user">
         <div class="user_item">
-          <router-link to="/set_user_info">
+          <router-link to="/user_data">
             <div>个人资料</div>
           </router-link>
         </div>

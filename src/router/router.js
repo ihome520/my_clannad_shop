@@ -94,6 +94,15 @@ export default [
     }
   },
   {
+    path:'/user_data',
+    name:'user_data',
+    component:() => import('views/user_data/UserData.vue'),
+    meta:{
+      requireAuth: true,
+      fullScreen:true
+    }
+  },
+  {
     path: '*',
     component: () => import('views/errors/NotFound.vue'),
     meta:{
