@@ -78,10 +78,8 @@
         AuthRequest('/user/uploadThumb', 'post', fileData, true).then(res => {
           if(res.code != 200){
             this.$toast(res.msg);
-            this.$toast.clear()
           }else{
             this.user.thumb = res.data;//替换头像
-            this.$toast.clear()
             this.$toast('更新成功');
           }
         })

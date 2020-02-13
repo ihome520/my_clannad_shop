@@ -9,7 +9,7 @@
           </router-link>
         </div>
         <div class="user_item">
-          <router-link to="/set_user_info">
+          <router-link to="/pswd_change">
             <div>密码修改</div>
           </router-link>
         </div>

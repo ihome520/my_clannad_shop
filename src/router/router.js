@@ -103,6 +103,24 @@ export default [
     }
   },
   {
+    path:'/pswd_change', //密码修改 发送验证码页
+    name:'pswd_change',
+    component:() => import('views/pswd_change/PswdChange.vue'),
+    meta:{
+      requireAuth: true,
+      fullScreen:true
+    }
+  },
+  {
+    path:'/set_password/:verify_str', //密码修改 修改密码页
+    name:'set_password',
+    component:() => import('views/set_password/SetPassWord.vue'),
+    meta:{
+      requireAuth: true,
+      fullScreen:true
+    }
+  },
+  {
     path: '*',
     component: () => import('views/errors/NotFound.vue'),
     meta:{

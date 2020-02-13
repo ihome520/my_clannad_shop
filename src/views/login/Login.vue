@@ -54,6 +54,10 @@
           return false
         }
 
+        this.$toast.loading({
+          message:'正在登录...'
+        })
+
         //开始请求登录接口
         HttpRequest('/login/login','post',this.formInputData).then(res=>{
           console.log(res);
@@ -64,6 +68,7 @@
 
           if(res.code != 200){
             this.$toast(res.msg);
+            this.$toast.clear();
           }else{
             localStorage.setItem('userToken',res.data.token);
 
@@ -75,10 +80,10 @@
             setTimeout(()=>{
               this.$router.replace(path);
             },1000)
-
           }
         }).catch(error=>{
           console.log(error);
+          this.$toast.clear();
         })
       }
     },
