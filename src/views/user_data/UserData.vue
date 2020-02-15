@@ -75,7 +75,7 @@
         fileData.append('thumb', img);
         // fileData.append('nick_name','古河渚');
 
-        AuthRequest('/user/uploadThumb', 'post', fileData, true).then(res => {
+        AuthRequest('/user/uploadThumbs', 'post', fileData, true).then(res => {
           if(res.code != 200){
             this.$toast(res.msg);
           }else{

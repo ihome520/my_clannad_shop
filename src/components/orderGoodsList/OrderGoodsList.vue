@@ -46,7 +46,6 @@
           message:'加载中...'
         })
         this.$emit('imgLoad');
-        this.$toast.clear();
       }
     },
   }

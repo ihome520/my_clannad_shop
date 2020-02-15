@@ -121,6 +121,23 @@ export default [
     }
   },
   {
+    path:'/wx_login_auth', //微信登录授权验证页
+    name:'wx_login_auth',
+    component:() => import('views/wx_login_auth/WxLoginAuth.vue'),
+    meta:{
+      fullScreen:true
+    }
+  },
+  {
+    path:'/search', //搜索页面
+    name:'search',
+    component:() => import('views/search/Search.vue'),
+    meta:{
+      requireAuth: true,
+      fullScreen:true
+    }
+  },
+  {
     path: '*',
     component: () => import('views/errors/NotFound.vue'),
     meta:{

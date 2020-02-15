@@ -37,8 +37,12 @@
         AuthRequest('/user/index').then(res=>{
           if(res.code != 200){
             this.$toast(res.msg);
+
+            //不存在或者锁定的情况 要删除本地token
+            localStorage.removeItem('userToken');
+
             setTimeout(()=>{
-              this.$route.replace('/home');
+              this.$router.replace('/home');
             },1500)
           }else{
             this.user_info = res.data.user_info;
