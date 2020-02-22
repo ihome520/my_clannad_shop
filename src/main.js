@@ -14,7 +14,7 @@ import {
   Button, Toast, Dialog, Tag, Tabbar, TabbarItem, Icon,Popup,
   Swipe, SwipeItem, Search, Lazyload, Picker, Tab, Tabs, TreeSelect,Checkbox,CheckboxGroup,
   NavBar,Stepper,GoodsAction, GoodsActionIcon, GoodsActionButton,SwipeCell,SubmitBar,NoticeBar,
-  PasswordInput, NumberKeyboard,Field
+  PasswordInput, NumberKeyboard,Field,DropdownMenu,DropdownItem
 
 } from 'vant' //引入vantUI库
 
@@ -23,7 +23,7 @@ Vue.use(Button).use(Toast).use(Dialog).use(Tag).use(Popup)
   .use(Search).use(Lazyload).use(Picker).use(Tab).use(Tabs).use(TreeSelect)
   .use(NavBar).use(Stepper).use(GoodsAction).use(GoodsActionButton)
   .use(GoodsActionIcon).use(Checkbox).use(CheckboxGroup).use(SwipeCell).use(SubmitBar).use(NoticeBar)
-  .use(PasswordInput).use(NumberKeyboard).use(Field); //引用组件
+  .use(PasswordInput).use(NumberKeyboard).use(Field).use(DropdownMenu).use(DropdownItem); //引用组件
 
 
 //挂载组件

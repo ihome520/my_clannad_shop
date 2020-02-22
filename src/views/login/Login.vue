@@ -115,7 +115,7 @@
         this.$route.query.redirect;
         let url = encodeURIComponent('https://wx.17hxg.com/index/login/wxLogin');
         // window.location.href='https://open.weixin.qq.com/connect/qrconnect?appid=wx876213c6af12013a&redirect_uri='+url+'&response_type=code&scope=snsapi_login&state=STATE#wechat_redirect';
-        window.location.href='https://wx.17hxg.com/index/login/wxLogin';
+        window.location.href='https://wx.17hxg.com/api/login/wxLogin';
       }
     },
     created() {

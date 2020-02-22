@@ -133,7 +133,14 @@ export default [
     name:'search',
     component:() => import('views/search/Search.vue'),
     meta:{
-      requireAuth: true,
+      fullScreen:true
+    }
+  },
+  {
+    path:'/category_area', //分类专区页面
+    name:'category_area',
+    component:() => import('views/category_area/CategoryArea.vue'),
+    meta:{
       fullScreen:true
     }
   },

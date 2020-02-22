@@ -30,7 +30,7 @@
     name: "PswdChange",
     data() {
       return {
-        tel: '18779031201',
+        tel: '',
         sms_code: '',
         send_status: false,
         send_text: '发送验证码',

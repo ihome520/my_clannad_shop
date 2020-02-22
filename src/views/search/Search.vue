@@ -3,16 +3,17 @@
     <van-search v-model="searchKeyWord" class="search_bar" placeholder="请输入搜索关键词" show-action shape="round" @search="onSearch">
       <div slot="action" @click="onSearch">搜索</div>
     </van-search>
+    <div class="bar"></div>
     <div class="goods">
       <scroll class="container" ref="scroll" @loadMore="loadMore" v-show="goods_list.length">
         <div class="goods_item_box">
           <div class="goods_item" v-for="(item,index) in goods_list" :key="index">
             <router-link :to="/goods/ + item.id">
-            <div class="img">
-              <img :src="item.thumb" @load="imgLoad"/>
-            </div>
-            <div class="goods_name">{{ item.goods_name }}</div>
-            <div class="price">￥{{ item.price }}</div>
+              <div class="img">
+                <img :src="item.thumb" @load="imgLoad"/>
+              </div>
+              <div class="goods_name">{{ item.goods_name }}</div>
+              <div class="price">￥{{ item.price }}</div>
             </router-link>
           </div>
         </div>
@@ -124,21 +125,37 @@
 </script>
 
 <style scoped lang="less">
+  .bar {
+    /*margin-top: 5px;*/
+    background-color: #cccccc;
+    position: relative;
+    top: 56px;
+    left: 0;
+    width: 100%;
+    border-bottom: #cccccc 5px solid
+  }
+
   .search_bar {
-    border-bottom: #cccccc 5px solid;
+    /*border-bottom: #cccccc 10px solid;*/
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1;
   }
 
   .goods {
-    height: 100vh;
+    height: calc(100vh - 61px);
     position: relative;
-    top: 0;
+    top: 56px;
     background-color: #cccccc;
 
     .container {
       position: absolute;
       top: 0;
       left: 0;
-      bottom: 56px;
+      bottom: 0;
+      /*bottom: 56px;*/
       width: 100%;
       overflow: hidden;
 
@@ -202,6 +219,7 @@
       height: 100%;
       background-color: #fff;
       text-align: center;
+      box-sizing: border-box;
     }
   }
 </style>

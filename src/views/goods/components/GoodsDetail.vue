@@ -23,8 +23,6 @@
 <style scoped>
   .goods_detail{
     padding: 5px;
-
-
   }
   .title{
     padding: 3px;
@@ -34,5 +32,9 @@
   .goods_detail >>> img{
     width: 100%;
     vertical-align:top;
+  }
+
+  .content{
+    font-size: 14px;
   }
 </style>
