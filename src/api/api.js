@@ -56,7 +56,15 @@ const HttpRequest = (url, method = 'get', params = {}, file = false) => {
   return instance.request(config);
 }
 
-
+/**
+ * auth请求 需要token认证的
+ * @param url 地址
+ * @param method 方法 默认get
+ * @param params 参数
+ * @param file 是否上传文件
+ * @returns {*}
+ * @constructor
+ */
 const AuthRequest = (url, method = 'get', params = {}, file = false) => {
   let headers = {
     Authorization: 'Bearer ' + localStorage.getItem('userToken')

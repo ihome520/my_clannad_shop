@@ -4,32 +4,6 @@
     <div class="container">
       <van-field size="large" class="input_item" maxlength="10" v-model="username" label="姓名"/>
       <van-field size="large" class="input_item" maxlength="11" v-model="tel" label="电话"/>
-      <!--<van-field size="large" class="input_item"  label="地址">
-        <template slot="input">
-          <select>
-            <option>fdsafa</option>
-            <option>fdsafa</option>
-            <option>fdsafa</option>
-            <option>fdsafa</option>
-            <option>fdsafa</option>
-          </select>
-          <select>
-            <option>fdsafa</option>
-            <option>fdsafa</option>
-            <option>fdsafa</option>
-            <option>fdsafa</option>
-            <option>fdsafa</option>
-          </select>
-          <select>
-            <option>fdsafa</option>
-            <option>fdsafa</option>
-            <option>fdsafa</option>
-            <option>fdsafa</option>
-            <option>fdsafa</option>
-          </select>
-        </template>
-      </van-field>-->
-
       <van-field
         readonly
         clickable
@@ -56,7 +30,7 @@
       </van-field>
 
       <div class="add_btn">
-        <van-button type="info" @click="add">添加</van-button>
+        <van-button type="info" @click="edit">修改</van-button>
       </div>
     </div>
   </div>
@@ -68,10 +42,11 @@
   import {AuthRequest} from "api/api";
 
   export default {
-    name: "UserAddrAdd",
+    name: "UserAddrEdit",
     components: {},
     data() {
       return {
+        id:0,
         area: '',
         address:'',
         username:'',
@@ -90,7 +65,7 @@
         this.area = values.map(item => item.name).join('/');
         this.showArea = false;
       },
-      add() {
+      edit(){
         if(!this.area || !this.address || !this.username || !this.tel){
           this.$toast('请输入完整信息');
           return false;
@@ -103,16 +78,17 @@
 
         this.$toast.loading('提交中...')
 
-        AuthRequest('/user/userAddressAdd','post',{
+        AuthRequest('/user/userAddressUpdate','post',{
           area:this.area,
           address:this.address,
           username:this.username,
           tel:this.tel,
+          id:this.id,
           default:is_default
         }).then(res => {
           this.$toast(res.msg);
           if(res.code != 200){
-              return false;
+            return false;
           }else{
             setTimeout(()=>{
               this.$router.replace('/user_addr_list');
@@ -120,8 +96,33 @@
           }
         })
       },
-    },
+      getAddrInfo() {
+        AuthRequest('/user/userAddressEdit','get',{
+          id:this.id
+        }).then(res => {
 
+          if(res.code != 200){
+            this.$toast(res.msg);
+
+            setTimeout(()=>{
+              this.$router.replace('/user_addr_list');
+            },1500)
+
+            return false;
+          }else{
+            this.area = res.data.area;
+            this.address = res.data.address;
+            this.username = res.data.username;
+            this.tel = res.data.tel;
+            this.is_default = res.data.default ? true : false
+          }
+        })
+      },
+    },
+    created(){
+      this.id = this.$route.params.id;
+      this.getAddrInfo();
+    }
   }
 
 </script>

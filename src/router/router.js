@@ -155,6 +155,15 @@ export default [
     }
   },
   {
+    path:'/user_addr_edit/:id', //用户地址修改
+    name:'user_addr_edit',
+    component:() => import('views/user_addr_edit/UserAddrEdit.vue'),
+    meta:{
+      requireAuth: true,
+      fullScreen:true
+    }
+  },
+  {
     path: '*',
     component: () => import('views/errors/NotFound.vue'),
     meta:{
