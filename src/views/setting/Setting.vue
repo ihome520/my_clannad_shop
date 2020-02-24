@@ -14,8 +14,8 @@
           </router-link>
         </div>
         <div class="user_item">
-          <router-link to="/set_user_info">
-            <div>实名认证</div>
+          <router-link to="/user_addr_list">
+            <div>收货地址</div>
           </router-link>
         </div>
       </div>

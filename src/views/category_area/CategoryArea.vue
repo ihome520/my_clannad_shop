@@ -152,7 +152,7 @@
         </div>
       </scroll>
       <div class="not_result" v-show="!goods_list.length">
-        ———— ☆ ~ 噢欧，没有找到 ~ ☆ ————
+        ———— ☆ ~ 噢欧，没有找到符合的商品 ~ ☆ ————
       </div>
     </div>
   </div>
@@ -171,7 +171,8 @@
     data() {
       return {
         keyword:'',
-        orderByDefault:0, //默认排序
+        keyword_allow:0,//关键词有效性 当为搜索条件进来时，或者，点击了当前页面的搜索功能时，才会有效，（此位置影响下拉加载功能）
+        orderByDefault:3, //默认排序 为新品上市
         orderByOptions:[
           {text:'价格升序',value:0},
           {text:'价格降序',value:1},
@@ -273,8 +274,11 @@
             price:this.price,
             filter_attr:this.filter_arr.join(),
             orderBy:this.orderByDefault,
-            keyword:this.keyword,
             page:this.next_page,
+          }
+
+          if(this.keyword_allow){
+            data.keyword = this.keyword;
           }
 
           HttpRequest('/search/filterGoods','get',data).then(res=>{
@@ -302,6 +306,26 @@
       searchGoods(){
         console.log('搜索goods');
         this.not_data = false;
+        this.keyword_allow = 1;
+        this.next_page = 2;
+        this.goods_list = [];
+        this.category_id = 0;
+        this.default_category_id = 0;//默认的分类id 这个分类id是页面加载的时候从URI里面获取的
+        this.brand_id = 0;
+        this.filter_attr = ''; //用于过滤的字符串
+        this.categoryList = [];
+        this.brandList = [];
+        this.price = ''; //价格的筛选字段
+        this.priceList = []; //价格的筛选字段
+        this.filter_attr_data = [];//属性的筛选字段
+        this.filter_arr = [];
+        this.filter_arr_kv = [];
+
+        if(this.keyword){
+          this.keywordSearch();
+        }else{
+          this.$toast('请输入搜索的关键词')
+        }
       },
       //更改分类
       changeCategory(id){
@@ -363,7 +387,27 @@
       },
       //根据关键词搜索产品
       keywordSearch(){
+        this.$toast.loading('加载中...');
+        HttpRequest('/search/keyWordSearch','get',{keyword:this.keyword}).then(res=>{
+          console.log(res);
+          if(res.code != 200){
+            this.$toast(res.msg);
+            this.$toast.clear();
+            return false;
+          }else{
+            this.$toast.clear();
 
+            this.goods_list = res.data.goodsList.data;
+            this.categoryList = res.data.categoryList;
+            this.brandList = res.data.brandList;
+            this.priceList = res.data.priceList;
+            this.filter_attr_data = res.data.filter_attr_data;
+
+            if(res.data.goodsList.current_page == res.data.goodsList.last_page){
+              this.not_data = true;
+            }
+          }
+        })
       }
     },
     created() {
@@ -377,6 +421,7 @@
       if(this.category_id){
         this.categorySearch();
       }else if(this.keyword){
+        this.keyword_allow = 1; //搜索条件进来的，下拉加载时，需要添加进这个条件
         this.keywordSearch();
       }else{
         this.$toast('缺少必要的搜索条件');

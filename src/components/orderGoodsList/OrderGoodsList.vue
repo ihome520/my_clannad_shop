@@ -42,9 +42,6 @@
        * 触发图片加载事件
        */
       imgLoad(){
-        this.$toast.loading({
-          message:'加载中...'
-        })
         this.$emit('imgLoad');
       }
     },
@@ -58,9 +55,7 @@
     display: flex;
 
     .product_img{
-      width: 100px;
-      height: 100px;
-
+      width: 20%;
       /*border: #d8d8d8 2px solid;*/
 
       img{
@@ -71,6 +66,7 @@
 
     .product_param{
       flex-grow:1;
+      width: 55%;
       padding:0 5px;
 
       .goods_name{
@@ -79,6 +75,7 @@
       }
 
       .param{
+
         font-size: 14px;
         color: #606060;
       }

@@ -145,8 +145,7 @@
         display: flex;
 
         .product_img{
-          width: 100px;
-          height: 100px;
+          width: 20%;
 
           /*border: #d8d8d8 2px solid;*/
 
@@ -158,6 +157,7 @@
 
         .product_param{
           flex-grow:1;
+          width: 50%;
           padding:0 5px;
 
           .goods_name{

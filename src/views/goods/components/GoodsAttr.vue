@@ -12,7 +12,7 @@
     </div>
     <div class="bay_num">
       <span>购买数量：</span>
-      <van-stepper v-model="goods_num" @change="changeGoodsNumber" min="1" max="5000" />
+      <van-stepper button-size="20" v-model="goods_num" @change="changeGoodsNumber" min="1" max="5000" />
     </div>
   </div>
 </template>

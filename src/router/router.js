@@ -137,10 +137,20 @@ export default [
     }
   },
   {
-    path:'/category_area', //分类专区页面
-    name:'category_area',
-    component:() => import('views/category_area/CategoryArea.vue'),
+    path:'/user_addr_list', //用户地址列表
+    name:'user_addr_list',
+    component:() => import('views/user_addr_list/UserAddrList.vue'),
     meta:{
+      requireAuth: true,
+      fullScreen:true
+    }
+  },
+  {
+    path:'/user_addr_add', //用户地址添加
+    name:'user_addr_add',
+    component:() => import('views/user_addr_add/UserAddrAdd.vue'),
+    meta:{
+      requireAuth: true,
       fullScreen:true
     }
   },
