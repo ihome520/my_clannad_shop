@@ -59,8 +59,8 @@
     data() {
       return {
         formInputData:{
-          username:'18779031201',
-          password:'123',
+          username:'ihome520',
+          password:'123456',
         },
         tips:''
       }
@@ -113,9 +113,9 @@
       wechat_login(){
         this.$toast('跳转中...');
         this.$route.query.redirect;
-        let url = encodeURIComponent('https://wx.17hxg.com/index/login/wxLogin');
+        // let url = encodeURIComponent('https://wx.17hxg.com/index/login/wxLogin');
         // window.location.href='https://open.weixin.qq.com/connect/qrconnect?appid=wx876213c6af12013a&redirect_uri='+url+'&response_type=code&scope=snsapi_login&state=STATE#wechat_redirect';
-        window.location.href='https://wx.17hxg.com/api/login/wxLogin';
+        window.location.href='https://wx.17hxg.com/index/login/wxLogin';
       }
     },
     created() {

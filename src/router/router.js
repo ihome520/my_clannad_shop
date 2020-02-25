@@ -164,6 +164,14 @@ export default [
     }
   },
   {
+    path:'/register', //用户注册
+    name:'register',
+    component:() => import('views/register/Register.vue'),
+    meta:{
+      fullScreen:true
+    }
+  },
+  {
     path: '*',
     component: () => import('views/errors/NotFound.vue'),
     meta:{

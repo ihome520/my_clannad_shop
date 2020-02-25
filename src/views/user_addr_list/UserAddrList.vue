@@ -5,7 +5,7 @@
         <div class="address_list_box">
           <div class="address_item" v-for="(item,index) in address_list" :key="index">
             <div class="left">
-              <span>{{ tests(item.username,index) | getUserNameFirst }}</span>
+              <span>{{ item.username | getUserNameFirst }}</span>
             </div>
             <div class="center">
               <div class="username">
@@ -15,8 +15,11 @@
               <div> {{ item.area + item.address }}</div>
             </div>
             <div class="right">
-              <router-link :to="'/user_addr_edit/' + item.id">修改</router-link>
-              <van-tag plain type="primary" v-show="item.default">默认</van-tag>
+              <div class="mgr">
+                <router-link :to="'/user_addr_edit/' + item.id">修改</router-link>&nbsp;
+                <a href="javascript:void(0);" @click="delAddress(item.id)">删除</a>
+              </div>
+              <van-tag plain type="primary" v-show="item.default">默认地址</van-tag>
             </div>
           </div>
         </div>
@@ -38,7 +41,6 @@
       return {
         address_list:[],
         chrCodeIsEnKV:[],
-        // is_chinese:false
       }
     },
     filters:{
@@ -47,15 +49,24 @@
       }
     },
     methods: {
-      tests(values,index){
-        // console.log(values);
-        // let pattern = /^[\u4e00-\u9fa5]+$/;
-        // if(pattern.test(values)){
-        //   this.chrCodeIsEnKV[index] = true;
-        // }else{
-        //   this.chrCodeIsEnKV[index] = false;
-        // }
-        return values;
+      delAddress(id){
+        this.$dialog.confirm({
+          title: '确认删除该地址？',
+        }).then(() => {
+          AuthRequest('/user/delAddress', 'get', {id: id}).then(res => {
+            this.$toast(res.msg);
+
+            if (res.code == 200) {
+              let index = this.address_list.findIndex(item => {
+                return item.id == id
+              })
+
+              this.address_list.splice(index, 1);
+            }
+          })
+        }).catch(err => {
+          //取消不作处理
+        })
       },
       onClickLeft() {
         this.$router.replace('/setting');
@@ -68,18 +79,7 @@
 
         AuthRequest('/user/userAddrList').then(res=>{
           this.address_list = res.data;
-
-          // if(this.address_list){
-          //   let pattern = /^[\u4e00-\u9fa5]+$/;
-          //
-          //   this.address_list.forEach((item,index) => {
-          //     if(pattern.test(item.username)){
-          //       this.chrCodeIsEnKV[index] = true;
-          //     }else{
-          //       this.chrCodeIsEnKV[index] = false;
-          //     }
-          //   })
-          // }
+          this.$toast.clear()
         })
       }
     },
@@ -125,7 +125,7 @@
           }
 
           .center{
-            width: 70%;
+            width: 61%;
             font-size: 14px;
 
             .username{
@@ -136,9 +136,19 @@
           .right{
             text-align: center;
             flex: 1;
+            font-size: 14px;
+
+            .mgr{
+              padding-bottom: 5px;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+            }
+
             a{
               color: #adadad;
-              font-size: 16px;
+              box-sizing: border-box;
+              padding-left: 5px;
             }
           }
         }

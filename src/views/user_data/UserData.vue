@@ -94,6 +94,7 @@
         }
       },
       updateUserInfo(){
+        //另外一种方式
         // let UserData = new FormData();
         // UserData.append('nick_name',this.user.nick_name);
         // UserData.append('age',this.user.age);

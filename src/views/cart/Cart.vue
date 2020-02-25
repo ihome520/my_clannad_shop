@@ -101,9 +101,6 @@
           newValue.forEach((item, index) => {
             this.numberKv.push(item.number);
             this.cartKv.push(item.id); //购物车对应的id
-            /*if (item.goods_name.length > 16) {
-              newValue[index].goods_name = item.goods_name.slice(0, 10) + '...';
-            }*/
           })
         },
         deep: true
@@ -168,10 +165,27 @@
       /**
        * 提交订单
        */
-      submitOrder() {
+      async submitOrder() {
         this.sumbiting = true;
         if (this.selectItem.length > 0) {
           let cart_ids = this.selectItem.toString();
+
+          //效验用户是否添加了收货地址
+          await AuthRequest('/cart/checkAddrCount').then(res=>{
+            if(res.code != 200){
+              this.$dialog.confirm({
+                title: res.msg,
+                confirmButtonText:'去设置'
+              }).then(() => {
+                this.$router.push({
+                  path: '/user_addr_list',
+                })
+              }).catch(err => {
+                //取消不作处理
+                return false;
+              })
+            }
+          })
 
           this.$router.push({
             path: '/order_confirm',
