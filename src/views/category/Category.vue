@@ -217,6 +217,11 @@
       getGoods(params) {
         HttpRequest('category/goods', 'get', params).then(res => {
           this.goodsList = res.data.data;
+
+          if(res.data.current_page == res.data.last_page){
+            this.noData = true;
+          }
+
         })
       }
     }

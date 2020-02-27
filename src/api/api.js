@@ -98,12 +98,12 @@ const AuthRequest = (url, method = 'get', params = {}, file = false) => {
 // 添加响应拦截器
 instance.interceptors.response.use(function (response) {
   //判断响应头中有没有新token
-  console.log(response);
+  // console.log(response);
   if(response.headers.authorization){
     let tokenArr = response.headers.authorization.split(" ");
-    console.log('替换前的token---' + localStorage.getItem('userToken'));
+    // console.log('替换前的token---' + localStorage.getItem('userToken'));
     localStorage.setItem('userToken',tokenArr[1]);
-    console.log('替换后的token---' + localStorage.getItem('userToken'));
+    // console.log('替换后的token---' + localStorage.getItem('userToken'));
   }
 
   switch (response.data.code) {
