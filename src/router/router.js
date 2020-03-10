@@ -172,6 +172,22 @@ export default [
     }
   },
   {
+    path:'/seckill', //秒杀商品列表页列表
+    name:'seckill',
+    component:() => import('views/sec_kill/SecKill.vue'),
+    meta:{
+      fullScreen:true
+    }
+  },
+  {
+    path:'/seckill_goods', //秒杀商品列表页列表
+    name:'seckill_goods',
+    component:() => import('views/seckill_goods/SecKillGoods.vue'),
+    meta:{
+      fullScreen:true
+    }
+  },
+  {
     path: '*',
     component: () => import('views/errors/NotFound.vue'),
     meta:{

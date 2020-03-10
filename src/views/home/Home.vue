@@ -26,6 +26,7 @@
         <!--主分类-->
         <home-category :category="category"/>
         <!--秒杀专场 待准备-->
+        <home-sec-kill/>
         <!--楼层推荐-->
         <!--<home-floor/>-->
 
@@ -43,7 +44,7 @@
   import HomeCategory from './components/HomeCategory'
   import HomeRecommend from './components/HomeRecommend'
   import HomeSwiper from './components/HomeSwiper'
-
+  import HomeSecKill from "./components/HomeSecKill";
   import ViewScroll from 'components/viewScroll/ViewScroll'
   import Search from 'components/search/Search'
 
@@ -55,6 +56,7 @@
       HomeSwiper,
       HomeCategory,
       HomeRecommend,
+      HomeSecKill,
       ViewScroll,
       Search
     },

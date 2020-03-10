@@ -71,6 +71,20 @@
           return false;
         }
 
+        let msg = '';
+        if (!/[\u4e00-\u9fa5A-Za-z_0-9]{1,10}$/.test(this.username)) {
+          msg = '姓名只能是中文、数字、下划线、字母';
+        }else if (!/^1[3456789]\d{9}$/u.test(this.tel)) {
+          msg = '手机号格式不正确';
+        }else if (!/[\u4e00-\u9fa5A-Za-z_0-9]{1,50}$/.test(this.address)) {
+          msg = '地址只能是中文、数字、下划线、字母，长度不能超过50个字符';
+        }
+
+        if(msg){
+          this.$toast(msg);
+          return false;
+        }
+
         let is_default = 0;
         if(this.is_default){
           is_default = 1;

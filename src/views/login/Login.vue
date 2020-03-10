@@ -92,7 +92,10 @@
           // console.log('存入');
 
           if(res.code != 200){
-            this.$toast(res.msg);
+            this.$toast.clear();
+            setTimeout(()=>{
+              this.$toast(res.msg);
+            },2000)
           }else{
             localStorage.setItem('userToken',res.data.token);
 
@@ -119,7 +122,10 @@
       }
     },
     created() {
-
+      //登录过的直接跑
+      if(localStorage.getItem('userToken')){
+          this.$router.replace('/home');
+      }
     },
     mounted() {
 

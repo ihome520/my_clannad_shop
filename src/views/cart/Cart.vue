@@ -36,6 +36,11 @@
           </div>
         </div>
       </van-checkbox-group>
+
+      <div class="not_data" v-show="!cartList.length">
+        <span>购物车中没有商品</span>
+        <router-link to="/home">去逛逛 ~</router-link>
+      </div>
     </div>
 
     <van-submit-bar class="submit_area"
@@ -235,6 +240,14 @@
 </script>
 
 <style scoped lang="less">
+  .not_data{
+    width: 100%;
+    text-align: center;
+    font-size: 16px;
+    padding-top: 5%;
+    box-sizing: border-box;
+    color: #cc855c;
+  }
   .cart {
     height: 100vh;
     background-color: #eaeaea;

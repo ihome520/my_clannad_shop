@@ -101,6 +101,22 @@
         // console.log(UserData);
         // UserData.append('sex',this.user.sex);
 
+        //修改前验证数据
+        if (!/[\u4e00-\u9fa5A-Za-z_0-9]{1,10}$/.test(this.user.nick_name)) {
+          this.$toast('昵称只能是中文、数字、下划线、字母');
+          return false;
+        }
+
+        if (!/[0|1]{1}$/.test(this.user.sex)) {
+          this.$toast('性别不在可选范围内');
+          return false;
+        }
+
+        if(this.user.age < 1 || this.user.age > 120){
+          this.$toast('年龄选项不能小于1或大于120');
+          return false;
+        }
+
         let UserData = {
           nick_name:this.user.nick_name,
           age:this.user.age,

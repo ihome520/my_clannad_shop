@@ -126,6 +126,7 @@ instance.interceptors.response.use(function (response) {
       break;
 
     case 401: // 未认证
+      localStorage.removeItem('userToken');
       Toast({
         message: '登录已经过期，请重新登录账号',
         duration: 1500
