@@ -11,12 +11,12 @@
 
     <div class="container">
       <div class="goods_price_show">
-        <span>￥8000.00</span>
-        <span>￥9990.00</span>
+        <span>￥{{ seckill.seckill_price }}</span>
+        <span>￥{{ seckill.price }}</span>
       </div>
       <div class="down_time">
         <div>距本次秒杀结束还剩</div>
-        <van-count-down :time="down_time">
+        <van-count-down @finish="onfinish" :time="down_time">
           <template v-slot="timeData">
             <span class="item">{{ timeData.days }}天</span>
             <span class="item">{{ timeData.hours }}时</span>
@@ -28,7 +28,7 @@
     </div>
 
     <div class="title">
-      夏季新款男士纯棉透气吸汗Polo格子衬衫T恤打底衫{{ goods_title }}
+      {{ goods_title }}
     </div>
 
   </div>
@@ -45,22 +45,19 @@
           return {}
         }
       },//夏季新款男士纯棉透气吸汗Polo格子衬衫T恤打底衫
-      goods_inventory: {
-        type: Array,
+      seckill:{
+        type:Object,
         default() {
-          return [];
+          return {};
         }
-      },
-      select_goods_price: {
-        type: String,
-        default: ''
       }
     },
     data() {
       return {
-        down_time: 30 * 60 * 60 * 1000,
+        down_time: 60,
         goods_title: '',
         goods_price: '9.99-999.99',
+        flag:1,//结束标识 页面加载的时候会触发一次结束 这里要分开触发
       }
     },
     watch: {
@@ -70,23 +67,24 @@
         },
         deep: true
       },
-      goods_inventory: {
-        handler(newValue, oldValue) {
-          //处理最高价和最低价
-          let prices = [];
-          newValue.forEach(res => {
-            prices.push(res.price);
-          })
-
-          prices.sort();//排序
-          //取最高和最低价格 低-》高
-          this.goods_price = prices.shift() + '~' + prices.pop();
+      seckill: {
+        handler(newValue,oldValue){
+            let timestamp = parseInt(new Date().getTime() / 1000);    // 当前时间戳
+            this.down_time = (this.$utils.strToTime(newValue.end_time) - timestamp) * 1000;
         },
-        deep: true
-      },
+        deep:true
+      }
     },
-    filter: {},
-    methods: {}
+    methods: {
+      onfinish(){
+        if(this.flag == 1){
+          this.$emit('onfinished',this.flag);
+          this.flag = 2;
+        }else{
+          this.$emit('onfinished',this.flag);
+        }
+      }
+    }
   }
 </script>
 

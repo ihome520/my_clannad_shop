@@ -9,6 +9,8 @@ const instance = axios.create();
 instance.defaults.baseURL = 'https://wx.17hxg.com/api';
 // instance.defaults.baseURL = 'http://www.66.com/index.php/api';
 instance.defaults.timeout = 5000;
+// instance.defaults.withCredentials = true // 允许携带cookie
+// instance.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 
 // 添加请求拦截器
 instance.interceptors.request.use(function (config) {
@@ -143,7 +145,7 @@ instance.interceptors.response.use(function (response) {
       Toast(response.data.msg);
       break;
 
-    case 429: // 403 权限不足
+    case 429: // 429 请求频繁
       Toast(response.data.msg);
       break;
 
@@ -203,11 +205,11 @@ instance.interceptors.response.use(function (response) {
       default:
         Toast('网络请求失败');
     }
+  }else{
+    Toast('网络请求失败');
+    console.log(error);
+    return Promise.reject(error);
   }
-
-  Toast('网络请求失败');
-  console.log(error);
-  return Promise.reject(error);
 });
 
 export {

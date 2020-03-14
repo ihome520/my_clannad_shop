@@ -189,13 +189,15 @@
                 //取消不作处理
                 return false;
               })
+            }else{
+              this.$router.push({
+                path: '/order_confirm',
+                query: {cart_ids}
+              })
             }
           })
 
-          this.$router.push({
-            path: '/order_confirm',
-            query: {cart_ids}
-          })
+
         } else {
           this.$toast('请选择要结算的商品')
           this.sumbiting = false;

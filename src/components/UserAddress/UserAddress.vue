@@ -81,14 +81,6 @@
         this.$emit('change_address',address_id)
       }
     },
-
-    created() {
-
-    },
-    mounted() {
-
-    },
-
   }
 
 </script>

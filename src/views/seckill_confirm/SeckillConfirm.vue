@@ -20,7 +20,7 @@
   import OrderInfo from "./components/OrderInfo";
 
   export default {
-    name: "OrderConfirm",
+    name: "SeckillConfirm",
     components: {
       UserAddress,
       OrderInfo
@@ -28,10 +28,11 @@
     props: {},
     data() {
       return {
-        cart_ids: 0,
+        goods_id:this.$route.query.goods_id,
         user_address: [],
         sumbiting:false,//提交状态
         cart_list:[],
+        sku:'',
         user_addr_id:0,//当前选中的地址id
         express_type:1,//快递配送类型 1是快递 2是自提
         total_price:0,
@@ -47,30 +48,32 @@
     beforeDestroy () {
       document.querySelector('body').removeAttribute('style')
     },
-    created() {
-      this.cart_ids = this.$route.query.cart_ids
-    },
     mounted() {
       this.getConfirmInfo();
     },
     methods: {
       getConfirmInfo(){
-        let cd = this.cart_ids
-        AuthRequest('/cart/settlement','post',{cart_ids:cd}).then(res=>{
+        let data ={
+          goods_id:this.goods_id,
+        }
+        AuthRequest('/ms/kill_goods/getConfirmInfo','post',data).then(res=>{
           if(res.code != 200){
             this.$toast(res.msg);
 
-            this.$router.replace('/cart'); //发生错误，调回购物车页面
+            // setTimeout(()=>{
+            //   this.$router.back();
+            // },1500)
           }else{
             //订单确认页
             console.log(res);
             this.user_address = res.data.user_address;
             this.cart_list = res.data.cart_list;
+            this.sku = res.data.sku;
           }
         })
       },
       onClickLeft(){
-        this.$router.replace('/cart');
+        this.$router.back();
       },
       /**
        * 改变配送地址
@@ -97,9 +100,10 @@
        */
       sumbitOrder(){
         this.sumbiting = true;
-        AuthRequest('/cart/confirmOrder','post',{
+        AuthRequest('/ms/kill_goods/createOrder','post',{
           user_addr_id:this.user_addr_id,
-          cart_ids:this.cart_ids,
+          goods_id:this.goods_id,
+          sku:this.sku,
           remark:this.remark,
           express_type:this.express_type
         }).then(res=>{

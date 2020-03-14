@@ -13,6 +13,7 @@
     <div class="bay_num">
       <span>购买数量：</span>
       <van-stepper button-size="20" v-model="goods_num" @change="changeGoodsNumber" min="1" max="5000" />
+      <span class="inventroy_num">库存：{{ inventory_num }}</span>
     </div>
   </div>
 </template>
@@ -28,10 +29,10 @@
           return []
         }
       },
-      goods_inventory:{
-        type:Array,
+      inventory_num:{
+        type:[String,Number],
         default(){
-          return []
+          return '请选择规格';
         }
       }
     },
@@ -156,7 +157,13 @@
     display: flex;
     padding-top: 5px;
 
-    span{
+    span:nth-child(1){
+      line-height: 25px;
+    }
+
+    .inventroy_num{
+      box-sizing: border-box;
+      margin-left: 8px;
       line-height: 25px;
     }
   }

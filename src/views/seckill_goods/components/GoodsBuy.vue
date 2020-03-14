@@ -3,7 +3,7 @@
     <van-goods-action>
       <van-goods-action-icon icon="wap-home-o" text="首页" @click="goHome"/>
       <van-goods-action-icon icon="cart-o" text="购物车" @click="goCart"/>
-      <van-goods-action-button type="danger" :disabled="disabled_buy" text="立即抢购" @click="buyGoods"/>
+      <van-goods-action-button type="danger" :disabled="disabled_buy" :loading="loading_ctrl" text="立即抢购" @click="buyGoods"/>
     </van-goods-action>
   </div>
 </template>
@@ -18,6 +18,10 @@
         type: Boolean,
         default: false
       },
+      loading_ctrl: {
+        type: Boolean,
+        default: false
+      },
     },
     methods: {
       goHome() {
@@ -25,9 +29,6 @@
       },
       goCart() {
         this.$router.push('/cart')
-      },
-      addToCart() {
-        this.$utils.checkLogin() ? this.$emit('addToCart') : "";
       },
       buyGoods() {
         this.$utils.checkLogin() ? this.$emit('buyGoods') : '';

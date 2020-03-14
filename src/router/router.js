@@ -58,6 +58,15 @@ export default [
     }
   },
   {
+    path:'/buy_goods', //立即下单后的跳转页面
+    name:'buy_goods',
+    component:() => import('views/buy_goods/BuyGoods.vue'),
+    meta:{
+      requireAuth: true,
+      fullScreen:true
+    }
+  },
+  {
     path:'/order_pay',
     name:'order_pay',
     component:() => import('views/order_pay/OrderPay.vue'),
@@ -183,6 +192,14 @@ export default [
     path:'/seckill_goods', //秒杀商品列表页列表
     name:'seckill_goods',
     component:() => import('views/seckill_goods/SecKillGoods.vue'),
+    meta:{
+      fullScreen:true
+    }
+  },
+  {
+    path:'/seckill_confirm', //秒杀商品确认订单页
+    name:'seckill_confirm',
+    component:() => import('views/seckill_confirm/SeckillConfirm.vue'),
     meta:{
       fullScreen:true
     }

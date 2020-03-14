@@ -55,7 +55,20 @@ const toDecimal = (x) => {
     return s;
 }
 
+/**
+ * 时间字符串转时间戳
+ * @param date 时间字符串 2015-03-05 17:59:00
+ * @returns {number}
+ * @constructor
+ */
+const strToTime = (date) => {
+  date = date.substring(0,19);
+  date = date.replace(/-/g,'/');
+  return new Date(date).getTime() / 1000;
+}
+
 export default {
   checkLogin,
-  toDecimal
+  toDecimal,
+  strToTime
 }

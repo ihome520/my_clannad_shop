@@ -23,6 +23,7 @@
 <style scoped>
   .goods_detail{
     padding: 5px;
+    margin-bottom: 50px;
   }
   .title{
     padding: 3px;

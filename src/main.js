@@ -4,6 +4,7 @@ import router from './router'
 import store from './store'
 import FastClick from 'fastclick'
 import 'amfe-flexible/index.js'
+import axios from 'axios'
 
 //导入核心公共方法
 import utils from './lib/utils'
@@ -31,6 +32,9 @@ Vue.use(Button).use(Toast).use(Dialog).use(Tag).use(Popup)
 Vue.prototype.$toast = Toast
 Vue.prototype.$dialog = Dialog
 Vue.prototype.$utils = utils //核心公共方法
+
+axios.defaults.withCredentials=true;//让ajax携带cookie
+Vue.prototype.$http = axios //axios
 
 Vue.config.productionTip = false
 

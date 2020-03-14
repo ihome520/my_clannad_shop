@@ -20,7 +20,7 @@
   import OrderInfo from "./components/OrderInfo";
 
   export default {
-    name: "OrderConfirm",
+    name: "BuyGoods",
     components: {
       UserAddress,
       OrderInfo
@@ -28,7 +28,9 @@
     props: {},
     data() {
       return {
-        cart_ids: 0,
+        sku_list:this.$route.query.sku_list,
+        goods_id:this.$route.query.goods_id,
+        goods_num:this.$route.query.goods_num,
         user_address: [],
         sumbiting:false,//提交状态
         cart_list:[],
@@ -47,20 +49,23 @@
     beforeDestroy () {
       document.querySelector('body').removeAttribute('style')
     },
-    created() {
-      this.cart_ids = this.$route.query.cart_ids
-    },
     mounted() {
       this.getConfirmInfo();
     },
     methods: {
       getConfirmInfo(){
-        let cd = this.cart_ids
-        AuthRequest('/cart/settlement','post',{cart_ids:cd}).then(res=>{
+        let data ={
+          sku_list:this.sku_list,
+          goods_id:this.goods_id,
+          goods_num:this.goods_num,
+        }
+        AuthRequest('/order/buy_goods','post',data).then(res=>{
           if(res.code != 200){
             this.$toast(res.msg);
 
-            this.$router.replace('/cart'); //发生错误，调回购物车页面
+            setTimeout(()=>{
+              this.$router.back();
+            },1500)
           }else{
             //订单确认页
             console.log(res);
@@ -70,7 +75,7 @@
         })
       },
       onClickLeft(){
-        this.$router.replace('/cart');
+        this.$router.back();
       },
       /**
        * 改变配送地址
@@ -97,9 +102,11 @@
        */
       sumbitOrder(){
         this.sumbiting = true;
-        AuthRequest('/cart/confirmOrder','post',{
+        AuthRequest('/order/createOrder','post',{
           user_addr_id:this.user_addr_id,
-          cart_ids:this.cart_ids,
+          goods_id:this.goods_id,
+          sku_list:this.sku_list,
+          goods_num:this.goods_num,
           remark:this.remark,
           express_type:this.express_type
         }).then(res=>{

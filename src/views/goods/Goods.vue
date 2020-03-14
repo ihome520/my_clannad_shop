@@ -127,7 +127,7 @@
       /**
        * 直接购买
        */
-      buyGoods() {
+      async buyGoods() {
         let filterSpec = this.choose_spec.filter(res => {
           return res != '';
         })
@@ -136,7 +136,32 @@
           return false
         }
 
-        console.log('下单');
+        //效验用户是否添加了收货地址
+        await AuthRequest('/cart/checkAddrCount').then(res=>{
+          if(res.code != 200){
+            this.$dialog.confirm({
+              title: res.msg,
+              confirmButtonText:'去设置'
+            }).then(() => {
+              this.$router.push({
+                path: '/user_addr_list',
+              })
+            }).catch(err => {
+              //取消不作处理
+              return false;
+            })
+          }else{
+            console.log('下单');
+            this.$router.push({
+              path:'/buy_goods',
+              query:{
+                sku_list: this.choose_spec.toString(),
+                goods_id: this.goods_id,
+                goods_num: this.goods_num
+              }
+            })
+          }
+        })
       },
       getGoodsInfo() {
         HttpRequest('/goods/show/' + this.$route.params.id).then(res => {
