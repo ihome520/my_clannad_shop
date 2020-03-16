@@ -40,12 +40,12 @@
         calcSecond: 100,
         verify_str: '',
         user: {
-          username: 'ihome520',
-          password: '123456',
-          password_confirmation: '123456',
-          nick_name: '月宫亚由',
-          tel: '18779031202',
-          email: 'hxxk@qq.com',
+          username: '',
+          password: '',
+          password_confirmation: '',
+          nick_name: '',
+          tel: '',
+          email: '',
           sex: 0
         }
       }

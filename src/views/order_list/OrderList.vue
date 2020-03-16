@@ -17,8 +17,8 @@
             <div class="list_box">
               <div class="header">
                 <div class="merchant_name">
-                  <van-icon name="shop-o" size="20" />
-                  <div>将军府冠捷旗舰店</div>
+                  <div><van-icon name="shop-o" size="20" />将军府冠捷旗舰店</div>
+                  <div v-show="order_status == 'all'">【{{ order_status_kv[item.status] }}】</div>
                 </div>
                 <div class="order_sn">
                   <span>订单号: {{ item.order_sn }}</span>
@@ -36,7 +36,7 @@
               <div class="footer">
                 <template v-if="item.status == '0'">
                   <van-button plain size="small" type="primary" @click="orderPayClick(item.order_sn)">付款</van-button>
-                  <van-button plain size="small" type="danger" @click="delOrder(item.order_sn)">删除订单</van-button>
+                  <van-button plain size="small" type="danger" v-if="item.order_type != 2" @click="delOrder(item.order_sn)">删除订单</van-button>
                 </template>
                 <template v-else-if="item.status == '2'">
                   <van-button plain size="small" type="warning">查看物流</van-button>
@@ -83,13 +83,14 @@
       return {
         order_list:[],
         active: 0,
-        order_type: 'all',
+        order_status: 'all',
         next_page: 2,
-        not_data:false
+        not_data:false,
+        order_status_kv:['未付款','待发货','待收货','已确认','已评价','已申请售后','售后处理中','售后处理完成'],
       }
     },
     watch: {
-      order_type(newValue){
+      order_status(newValue){
         newValue == 'all' ? this.active = 0 : this.active = newValue
       }
     },
@@ -129,7 +130,7 @@
         this.$router.push('/order_detail/' + order_sn);
       },
       tabClick(type,name){
-        this.order_type = type;
+        this.order_status = type;
         this.next_page = 2;
         this.order_list = [];
         this.not_data = false;
@@ -144,7 +145,7 @@
         })
         await AuthRequest('/order/index', 'get', {
           page: 1,
-          order_type:this.order_type
+          order_status:this.order_status
         }).then(res => {
 
           this.order_list = res.data.data
@@ -166,7 +167,7 @@
           })
           await AuthRequest('/order/index', 'get', {
             page: this.next_page,
-            order_type:this.order_type
+            order_status:this.order_status
           }).then(res => {
             this.order_list.push(...res.data.data);
 
@@ -195,7 +196,7 @@
       this.active = this.$route.params.type
 
       if(this.$route.params.type != 'all'){ //如果不是所有的情况下，就改变类型
-        this.order_type = this.$route.params.type;
+        this.order_status = this.$route.params.type;
       }
 
       this.getOrderList();
@@ -244,6 +245,7 @@
               align-items: center;
               padding-bottom: 5px;
               color: #868686;
+              justify-content: space-between;
             }
 
             .order_sn{

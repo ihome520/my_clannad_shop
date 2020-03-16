@@ -87,7 +87,7 @@
     </div>
     <div class="footer" v-show="status != 1 && status < 5">
       <van-button plain v-show="status == 0" type="info" size="small" @click="orderPayClick(order_sn)">付款</van-button>
-      <van-button plain v-show="status == 0 || status == 4" type="info" size="small" @click="delOrder(order_sn)">删除订单</van-button>
+      <van-button plain v-show="(status == 0 || status == 4) && order_type != 2" type="info" size="small" @click="delOrder(order_sn)">删除订单</van-button>
       <van-button plain v-show="status == 2" type="info" size="small">确认收货</van-button>
       <van-button plain v-show="status == 3" type="info" size="small">去评价</van-button>
       <van-button plain v-show="status == 4" type="info" size="small">申请售后</van-button>
@@ -109,6 +109,7 @@
       return {
         order_sn:this.$route.params.order_sn,
         status: 1,
+        order_type:1,
         express_price: 0.00,
         goods_total: 1,
         price_total: 36.00,
@@ -144,11 +145,7 @@
             this.$toast(res.msg);
 
             if (res.code == 200) {
-              let index = this.order_list.findIndex(item => {
-                return item.order_sn == order_sn
-              })
-
-              this.order_list.splice(index, 1);
+             this.$router.back();
             }
           })
         }).catch(err => {
@@ -164,6 +161,7 @@
           this.goods_total = res.data.goods_total;
           this.price_total = res.data.price_total;
           this.pay_time = res.data.pay_time;
+          this.order_type = res.data.order_type;
           this.created_at = res.data.created_at;
           this.send_time = res.data.send_time;
           this.confirm_time = res.data.confirm_time;
