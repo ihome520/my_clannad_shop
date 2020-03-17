@@ -6,9 +6,9 @@
         <div class="header_right">
           <div class="user_name">
             <span>{{ user_info.nick_name }}</span>
-            &nbsp;
             <van-tag round type="success">购物达人</van-tag>
           </div>
+          <div class="tel">账户余额：￥{{ user_info.balance }}</div>
           <div class="tel">Tel: {{ user_info.tel }}</div>
         </div>
       </div>

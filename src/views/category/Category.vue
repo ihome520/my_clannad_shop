@@ -54,23 +54,48 @@
         isLoading:false,//上拉加载状态
         sort:'created_at',
         order_by:'desc',
+        isFirstEnter:true,
+        scrollY:0,
       }
     },
     watch: {
-      categoryIdsKv(newData) {
-        this.currCategoryId = newData['0'] ? newData['0'] : 0;
-        if (this.currCategoryId) { //如果有大分类数据回来，就请求子分类
-          this.getChildCategory(this.currCategoryId) //获得子分类
-          this.getGoods({
-            category_id:this.currCategoryId
-          }) //获得商品
-        }
-      }
+      // categoryIdsKv(newData) {
+      //   console.log(111);
+        // this.currCategoryId = newData['0'] ? newData['0'] : 0;
+        // if (this.currCategoryId) { //如果有大分类数据回来，就请求子分类
+        //   this.getChildCategory(this.currCategoryId) //获得子分类
+        //   this.getGoods({
+        //     category_id:this.currCategoryId
+        //   }) //获得商品
+        // }
+      // }
     },
-    mounted() {
-      this.$refs['scroll'].refresh();
+    activated() {
+      // this.$refs['scroll'].refresh();
       //先获取所有分类
-      this.getAllCategory();
+      if(!this.$route.meta.isBack || this.isFirstEnter){
+        this.goodsList = [];
+        this.noData = false;
+        this.nextPage = 2;
+        this.activeIndex = 0;
+        this.isLoading = false;//关闭加载状态
+        this.getAllCategory();
+      }
+      this.isFirstEnter = false;
+      this.$route.meta.isBack = false;
+      this.$refs.scroll.scrollTo(0,this.scrollY,100);
+    },
+    beforeRouteLeave(to, form, next) {
+      this.scrollY = this.$refs.scroll.getScrollY();
+      next()
+    },
+    beforeRouteEnter(to,from,next){
+      if(from.name == 'goods' && to.name == 'category'){
+        to.meta.isBack = true;
+        next()
+      }else{
+        next()
+      }
     },
     methods: {
       /**
@@ -118,6 +143,7 @@
        * 子分类点击
        */
       childClick(category_id) {
+
         this.noData = false;
         this.isLoading = false;//关闭加载状态
         this.nextPage = 2;
@@ -168,13 +194,26 @@
        * 获得所有大分类
        */
       getAllCategory() {
+        this.$toast.loading('加载中');
         HttpRequest('category/categorys').then(res => {
           this.category = res.data.categorys;
 
+          this.categoryIdsKv = [];
           //做成一个键值对，对应每一个分类数据
           res.data.categorys.forEach(item => {
             this.categoryIdsKv.push(item.id);
           })
+
+          this.currCategoryId = this.categoryIdsKv['0'] ? this.categoryIdsKv['0'] : 0;
+          if (this.currCategoryId) { //如果有大分类数据回来，就请求子分类
+            this.getChildCategory(this.currCategoryId) //获得子分类
+            this.getGoods({
+              category_id:this.currCategoryId
+            }) //获得商品
+          }
+          this.$toast.clear()
+        }).catch(err=>{
+          this.$toast.clear()
         })
       },
       /**
@@ -215,13 +254,16 @@
        * @param params 对象参数
        */
       getGoods(params) {
+        this.$toast.loading('加载中');
         HttpRequest('category/goods', 'get', params).then(res => {
           this.goodsList = res.data.data;
 
           if(res.data.current_page == res.data.last_page){
             this.noData = true;
           }
-
+          this.$toast.clear()
+        }).catch(err=>{
+          this.$toast.clear()
         })
       }
     }
@@ -232,20 +274,19 @@
   .tree_select{
     position: absolute;
     top: 46px;
-    bottom: 50px;
+    bottom: 0;
     width: 100%;
     left: 0;
   }
   .category-goods {
-    height: 100vh;
+    height: calc(100vh - 46px);
     position: relative;
-
   }
 
   .container {
     position: absolute;
     overflow: hidden;
-    top: 1px;
+    top: 0;
     bottom: 50px;
     left: 0;
     right: 0;
@@ -253,8 +294,9 @@
 
   .no-data {
     text-align: center;
-    position: relative;
     bottom: 50px;
     color: #c2d0d0;
+    padding: 2%;
+    box-sizing: border-box;
   }
 </style>

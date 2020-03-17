@@ -22,7 +22,7 @@
     },
     methods: {
       goHome() {
-        this.$router.replace('/home');
+        this.$router.push('/home');
       },
       goCart() {
         this.$router.push('/cart')

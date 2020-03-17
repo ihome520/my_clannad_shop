@@ -67,8 +67,25 @@ const strToTime = (date) => {
   return new Date(date).getTime() / 1000;
 }
 
+/**
+ * 裁剪字符串
+ * @param str 字符串
+ * @param start 字符串
+ * @param cutLength 裁剪的长度
+ * @param exts 尾部添加字符串
+ * @returns {string}
+ */
+const cutString = (str,start = 0,cutLength = 16 , exts = '...')=>{
+  if(str.length > cutLength){
+    return str.substring(start,cutLength) + exts;
+  }else{
+    return str;
+  }
+}
+
 export default {
   checkLogin,
   toDecimal,
-  strToTime
+  strToTime,
+  cutString
 }

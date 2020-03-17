@@ -14,7 +14,7 @@
     name: "Scroll",
     props:{
       probeType:{ //设置为3的时候，才会执行滚动监听
-        type:Number,
+        type:[Number,String],
         default:0,
       },
       pullUpload:{ //触底控制
@@ -69,6 +69,11 @@
       //滚动到顶部
       scrollTo(x,y,time = 5000){
         this.scroll.scrollTo(x,y,time)
+        setTimeout(()=>{
+          this.scroll.finishPullUp();
+          this.scroll.refresh();
+          this.scroll.stop();
+        },time)
       },
       refresh(){ //重新刷新计算高度
         this.scroll && this.scroll.refresh();

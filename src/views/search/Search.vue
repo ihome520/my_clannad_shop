@@ -142,7 +142,7 @@
               <div class="thumb">
                 <img :src="item.thumb" @load="imgLoad"/>
               </div>
-              <div class="goods_name">{{ item.goods_name }}</div>
+              <div class="goods_name">{{ item.goods_name | cutString(item.goods_name) }}</div>
               <div class="goods_price">￥{{ item.price }}</div>
             </router-link>
           </div>
@@ -196,6 +196,8 @@
         filter_attr_data:[],//属性的筛选字段
         filter_arr:[],
         filter_arr_kv:[],
+        isFirstEnter:true,
+        scrollY:0,
       }
     },
     watch: {
@@ -213,12 +215,12 @@
         },
         deep:true
       },
-      goods_list: {
+      /*goods_list: {
         /**
          * 截取商品名字字符串
          * @param newValue
          * @param oldValue
-         */
+
         handler(newValue, oldValue) {
           newValue.forEach((item, index) => {
             if (item.goods_name.length > 16) {
@@ -227,7 +229,7 @@
           })
         },
         deep: true
-      }
+      }*/
     },
     methods: {
       onClickLeft(){
@@ -280,7 +282,7 @@
         this.$refs.scroll.refresh()
       },
       //上拉加载更多
-      loadMore(){
+      async loadMore(){
         if(!this.not_data){
           this.$toast.loading('加载中...');
 
@@ -302,7 +304,7 @@
             }
           }
 
-          HttpRequest('/search/filterGoods','get',data).then(res=>{
+          await HttpRequest('/search/filterGoods','get',data).then(res=>{
             console.log(res);
             if(res.code != 200){
               this.$toast(res.msg);
@@ -327,9 +329,10 @@
       searchGoods(){
         console.log('搜索goods');
         this.not_data = false;
-        this.keyword_allow = 1;
         this.next_page = 2;
         this.goods_list = [];
+
+        this.keyword_allow = 1;
         this.category_id = 0;
         this.default_category_id = 0;//默认的分类id 这个分类id是页面加载的时候从URI里面获取的
         this.brand_id = 0;
@@ -432,26 +435,50 @@
         })
       }
     },
-    created() {
-      console.log(this.$route);
+    activated() {
       // 页面加载时，通过keyword和分类id进行2个接口的请求区分
+      if(!this.$route.meta.isBack || this.isFirstEnter){
+        //重新加载的时候要重置数据
+        this.old_keyword = '';
+        this.keyword_allow = 0;
+        this.orderByDefault = 3;
+        this.goods_list = [];
+        this.not_data = false;
+        this.brand_id = 0;
+        this.next_page = 2;
 
-      this.category_id = this.$route.query.category_id ? this.$route.query.category_id : 0;
-      this.default_category_id = this.$route.query.category_id ? this.$route.query.category_id : 0;
-      this.keyword = this.$route.query.keyword ? this.$route.query.keyword : '';
+        this.category_id = this.$route.query.category_id ? this.$route.query.category_id : 0;
+        this.default_category_id = this.$route.query.category_id ? this.$route.query.category_id : 0;
+        this.keyword = this.$route.query.keyword ? this.$route.query.keyword : '';
 
-      if(this.category_id){
-        this.categorySearch();
-      }else if(this.keyword){
-        this.keyword_allow = 1; //搜索条件进来的，下拉加载时，需要添加进这个条件
-        this.old_keyword = this.keyword;
-        this.keywordSearch();
+        if(this.category_id){
+          this.categorySearch();
+        }else if(this.keyword){
+          this.keyword_allow = 1; //搜索条件进来的，下拉加载时，需要添加进这个条件
+          this.old_keyword = this.keyword;
+          this.keywordSearch();
+        }else{
+          this.$toast('缺少必要的搜索条件');
+
+          setTimeout(()=>{
+            this.$router.replace('/home'); //跳转进首页
+          },1000)
+        }
+      }
+      this.isFirstEnter = false;
+      this.$route.meta.isBack = false;
+      this.$refs.scroll.scrollTo(0,this.scrollY,100);
+    },
+    beforeRouteLeave(to, form, next) {
+      this.scrollY = this.$refs.scroll.getScrollY();
+      next()
+    },
+    beforeRouteEnter(to,from,next){
+      if(from.name == 'goods' && to.name == 'search'){
+        to.meta.isBack = true;
+        next()
       }else{
-        this.$toast('缺少必要的搜索条件');
-
-        setTimeout(()=>{
-          this.$router.replace('/home'); //跳转进首页
-        },1000)
+        next()
       }
     },
   }

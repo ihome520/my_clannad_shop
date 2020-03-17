@@ -227,8 +227,10 @@
         })
       },
       getCartList() {
+        this.$toast.loading('加载中');
         AuthRequest('/cart/index').then(res => {
           this.cartList = res.data;
+          this.$toast.clear()
         })
       }
     },

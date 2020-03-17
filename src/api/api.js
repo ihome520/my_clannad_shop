@@ -206,7 +206,7 @@ instance.interceptors.response.use(function (response) {
         Toast('网络请求失败');
     }
   }else{
-    Toast('网络请求失败');
+    Toast('网络请求超时，请重试');
     console.log(error);
     return Promise.reject(error);
   }

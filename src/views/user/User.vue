@@ -34,6 +34,7 @@
       },
       //检查是否有token，如果没有，表示没有登录
       getUserInfo(){
+        this.$toast.loading('加载中');
         AuthRequest('/user/index').then(res=>{
           if(res.code != 200){
             this.$toast(res.msg);
@@ -44,10 +45,16 @@
             setTimeout(()=>{
               this.$router.replace('/home');
             },1500)
+
+            this.$toast.clear()
           }else{
             this.user_info = res.data.user_info;
             this.order_info = res.data.order_info;
+
+            this.$toast.clear()
           }
+        }).catch(err=>{
+          this.$toast.clear()
         })
       }
     }

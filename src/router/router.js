@@ -9,12 +9,16 @@ export default [
     component: () => import('views/home/Home.vue'),
     meta:{
       fullScreen:false,
+      keepAlive:true
     }
   },
   {
     path: '/category',
     name:'category',
-    component: () => import('views/category/Category.vue')
+    component: () => import('views/category/Category.vue'),
+    meta:{
+      keepAlive:true
+    }
   },
   {
     path: '/cart',
@@ -34,7 +38,7 @@ export default [
   },
   {
     path: '/goods/:id',
-    name:'user',
+    name:'goods',
     component: () => import('views/goods/Goods.vue'),
     meta:{
       fullScreen:true,
@@ -81,7 +85,8 @@ export default [
     component:() => import('views/order_list/OrderList.vue'),
     meta:{
       requireAuth: true,
-      fullScreen:true
+      fullScreen:true,
+      keepAlive:true
     }
   },
   {
@@ -142,7 +147,8 @@ export default [
     name:'search',
     component:() => import('views/search/Search.vue'),
     meta:{
-      fullScreen:true
+      fullScreen:true,
+      keepAlive:true
     }
   },
   {

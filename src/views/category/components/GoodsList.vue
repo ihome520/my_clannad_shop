@@ -13,7 +13,7 @@
         <router-link :to="'/goods/' + item.id">
           <img :src="item.thumb" @load="imgLoad"/>
           <div>
-            <span class="goods_name">{{ item.goods_name }}</span>
+            <span class="goods_name">{{ item.goods_name | cutString(item.goods_name)}}</span>
             <div class="price">￥{{ item.price }}</div>
             <i></i>
           </div>
@@ -108,7 +108,6 @@
     width: 100%;
     flex-wrap: wrap;
     justify-content: space-between;
-    padding-bottom: 50px;
 
     .goods-item {
       width: 47%;

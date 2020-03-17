@@ -1,6 +1,6 @@
 <template>
   <van-tabbar v-model="active">
-    <van-tabbar-item class="nav_bar_item" v-for="(item,index) in tabbar" :key="index" :to="item.path"
+    <van-tabbar-item replace class="nav_bar_item" v-for="(item,index) in tabbar" :key="index" :to="item.path"
                      :icon="item.icon">{{ item.name }}
     </van-tabbar-item>
   </van-tabbar>
@@ -46,12 +46,20 @@
         ]
       }
     },
+    watch: {
+      '$route' (to, from) {// 对路由变化作出响应
+        this.setActive();
+      }
+    },
     created(){
-      let path = this.$route.name;
-      this.setActive(path);//设置导航的选中状态
+
+      // console.log(path);
+      // this.setActive(path);//设置导航的选中状态
     },
     methods:{
-      setActive(path){
+      setActive(){
+        let path = window.location.href.split("#/")[1];
+
         let index = this.tabbar.findIndex(res=>{
           return res.pathName == path;
         })
@@ -61,6 +69,13 @@
         if(index != -1){
           this.active = index;
         }
+
+        // const href = window.location.href.split("#/")[1];
+        // for(let i=0;i<4;i++){
+        //   if(href==this.tabbar[i]){
+        //     this.active=i;
+        //   }
+        // }
       }
     }
   }

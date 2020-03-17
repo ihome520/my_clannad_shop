@@ -95,7 +95,6 @@
 
     .container{
       margin-top:46px;
-      background-color: #cccccc;
       height: calc(100% - 46px);
 
       .address_list_box{
@@ -105,7 +104,7 @@
           padding: 2%;
           display: flex;
           align-items: center;
-          background-color: #fff;
+          background-color: #ebf2fd;
           border-radius: 5px;
           box-sizing: border-box;
           margin-bottom: 5px;

@@ -1,7 +1,10 @@
 <template>
   <div class="recommend">
-    <van-tabs ref="tabs" @click="tabClick" v-model="active" swipeable sticky>
-      <van-tab v-for="(item,index) in recom_categorys" :key="index" :name="item.id" :title="item.category_name">
+    <van-tabs ref="tabs" @click="tabClick" v-model="active" swipeable>
+      <van-tab :class="{'sticky_top':stickyTop}"
+               v-for="(item,index) in recom_categorys"
+               :key="index" :name="item.id"
+               :title="item.category_name">
 
         <div class="goods-box">
           <template v-if="goodsList.length > 0">
@@ -9,7 +12,7 @@
               <router-link :to="/goods/ + item.id">
                 <img :src="item.thumb" @load="imgLoad"/>
 
-                  <div class="goods_name">{{ item.goods_name }}</div>
+                  <div class="goods_name">{{ item.goods_name | cutString(item.goods_name)}}</div>
                   <div class="price">￥{{ item.price }}</div>
               </router-link>
             </div>
@@ -45,6 +48,7 @@
     data() {
       return {
         active: 0,
+        stickyTop:false //是否在顶部固定
       }
     },
     methods: {
@@ -64,12 +68,14 @@
 </script>
 
 <style scoped lang="less">
+  .sticky_top{
+    height: calc(100vh - 142px);
+  }
   .goods-box {
     display: flex;
     width: 100%;
     flex-wrap: wrap;
     justify-content: space-between;
-    margin-bottom: 50px;
 
     .goods-item {
       width: 48%;

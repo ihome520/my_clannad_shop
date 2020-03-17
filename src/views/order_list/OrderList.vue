@@ -86,6 +86,8 @@
         order_status: 'all',
         next_page: 2,
         not_data:false,
+        isFirstEnter:true,//第一次进入页面
+        scrollY:0,
         order_status_kv:['未付款','待发货','待收货','已确认','已评价','已申请售后','售后处理中','售后处理完成'],
       }
     },
@@ -192,14 +194,34 @@
         this.$refs['scroll'].refresh();
       }
     },
-    created() {
-      this.active = this.$route.params.type
+    activated() {
+      //如果不是从其他页面返回，或者是第一次进入的时候，就获取最新的数据
+      if(!this.$route.meta.isBack || this.isFirstEnter){
+        this.scrollY = 0;
 
-      if(this.$route.params.type != 'all'){ //如果不是所有的情况下，就改变类型
-        this.order_status = this.$route.params.type;
+        this.active = this.$route.params.type
+        if(this.$route.params.type != 'all'){ //如果不是所有的情况下，就改变类型
+          this.order_status = this.$route.params.type;
+        }
+
+        this.getOrderList();
       }
-
-      this.getOrderList();
+      this.isFirstEnter = false;
+      this.$route.meta.isBack = false;
+      this.$refs.scroll.scrollTo(0,this.scrollY,1000);
+    },
+    beforeRouteLeave(to, form, next) {
+      this.scrollY = this.$refs.scroll.getScrollY();
+      next()
+    },
+    beforeRouteEnter(to,from,next){
+      //从付款或者查看详情页面回来的时候
+      if((from.name == 'order_detail' || from.name == 'order_pay') && to.name == 'order_list'){
+        to.meta.isBack = true;
+        next()
+      }else{
+        next()
+      }
     },
   }
 
@@ -213,7 +235,7 @@
   }
 
   .order_list_box {
-    height: 100vh;
+    height: calc(100vh - 95px);
     position: relative;
     top: 0;
 
@@ -221,7 +243,7 @@
       position: absolute;
       top: 0;
       left: 0;
-      bottom: 90px;
+      bottom: 0;
       width: 100%;
       overflow: hidden;
       background-color: #cccccc;

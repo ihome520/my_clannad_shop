@@ -1,6 +1,9 @@
 <template>
   <div id="app">
-    <router-view/>
+    <keep-alive>
+      <router-view v-if="$route.meta.keepAlive"/>
+    </keep-alive>
+    <router-view v-if="!$route.meta.keepAlive"/>
 
     <nav-tabbar v-show="!$route.meta.fullScreen"/>
   </div>
@@ -12,7 +15,7 @@
   export default {
     components:{
       NavTabbar
-    }
+    },
   }
 </script>
 
