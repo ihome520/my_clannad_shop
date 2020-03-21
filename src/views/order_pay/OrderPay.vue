@@ -18,7 +18,7 @@
         </div>
       </div>
       <div class="pay_btn">
-        <van-button type="primary">微信支付</van-button>
+        <van-button type="primary" @click="weixinPay">微信支付</van-button>
 <!--        <van-button type="info">支付支付</van-button>-->
           <van-button type="warning" :disabled="balance_ctrl" @click="showKeyboard = true">余额支付</van-button>
       </div>
@@ -48,6 +48,7 @@
 
 <script>
   import {AuthRequest} from "api/api";
+  import wx from 'weixin-js-sdk';
 
   export default {
     name: "OrderPay",
@@ -145,11 +146,96 @@
           //支付宝支付
 
         }
+      },
+
+      weixinPay() {
+        //先请求后端返回响应的签名串
+        AuthRequest('/wxpay/orderPay', 'get', {'order_sn': this.order_sn}).then(res => {
+          if (res.code != 200) {
+            this.$dialog.alert(res.msg);
+            return false;
+          } else {
+
+            this.$toast('微信支付暂停使用，请使用余额支付');
+            return false;
+            //跳转到H5支付
+            //window.location.href = res.data.mweb_url;
+
+            //本机发起微信JSSDK支付
+            if (typeof WeixinJSBridge == "undefined"){
+              if( document.addEventListener ){
+                document.addEventListener('WeixinJSBridgeReady', onBridgeReady, false);
+              }else if (document.attachEvent){
+                document.attachEvent('WeixinJSBridgeReady', onBridgeReady);
+                document.attachEvent('onWeixinJSBridgeReady', onBridgeReady);
+              }
+            }else{
+              this.onBridgeReady(res.data);
+            }
+            //发起微信支付
+            // wx.chooseWXPay({
+            //   timestamp: res.data.timeStamp, // 支付签名时间戳，注意微信jssdk中的所有使用timestamp字段均为小写。但最新版的支付后台生成签名使用的timeStamp字段名需大写其中的S字符
+            //   nonceStr: res.data.nonceStr, // 支付签名随机串，不长于 32 位
+            //   package: res.data.package,
+            //   signType: res.data.signType, // 签名方式，默认为'SHA1'，使用新版支付需传入'MD5'
+            //   paySign: res.data.sign, // 支付签名
+            //   success: function (res) {
+            //     // 支付成功后的回调函数
+            //     if (res.errMsg === 'chooseWXPay:ok') {
+            //       // 支付成功
+            //       /*eslint-disable */
+            //       this.$dialog.alert('成功：' + res.msg);
+            //     } else {
+            //       alert(res.errMsg)
+            //       this.$dialog.alert('失败：' + res.msg);
+            //     }
+            //   },
+            //   cancel: function (res) {
+            //     // 支付取消
+            //     alert('支付取消')
+            //   }
+            // })
+          }
+        })
+      },
+      onBridgeReady(data){
+        WeixinJSBridge.invoke(
+          'getBrandWCPayRequest', {
+            "appId":data.appId,     //公众号名称，由商户传入
+            "timeStamp":data.timeStamp,         //时间戳，自1970年以来的秒数
+            "nonceStr":data.nonceStr, //随机串
+            "package":data.package,
+            "signType":data.signType,         //微信签名方式：
+            "paySign":data.paySign //微信签名
+          },
+          function(res){
+            if(res.err_msg == "get_brand_wcpay_request:ok" ){
+              // 使用以上方式判断前端返回,微信团队郑重提示：
+              //res.err_msg将在用户支付成功后返回ok，但并不保证它绝对可靠。
+              this.$toast('支付成功');
+              setTimeout(()=>{
+                this.$router.replace('/user');
+              },1500)
+            }else if(res.err_msg == 'get_brand_wcpay_request:fail'){
+              this.$toast('支付失败，请联系管理员或稍后重试，即将跳转到用户中心');
+              setTimeout(()=>{
+                this.$router.replace('/user');
+              },1500)
+            }else if(res.err_msg == 'get_brand_wcpay_request:cancel'){
+              //用户取消付款
+            }
+          });
       }
     },
     created(){
       this.getOrderInfo();
     },
+    /**
+     * 微信支付
+     */
+
+
+
   }
 
 </script>

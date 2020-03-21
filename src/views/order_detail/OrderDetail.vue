@@ -156,24 +156,32 @@
         AuthRequest('/order/show','get',{
           order_sn:this.order_sn
         }).then(res=>{
-          this.status = res.data.status;
-          this.express_price = res.data.express_price;
-          this.goods_total = res.data.goods_total;
-          this.price_total = res.data.price_total;
-          this.pay_time = res.data.pay_time;
-          this.order_type = res.data.order_type;
-          this.created_at = res.data.created_at;
-          this.send_time = res.data.send_time;
-          this.confirm_time = res.data.confirm_time;
-          this.comment_time = res.data.comment_time;
-          this.after_serve_time = res.data.after_serve_time;
-          this.county_id = res.data.county_id;
-          this.address = res.data.address;
-          this.username = res.data.username;
-          this.tel = res.data.tel;
-          this.remark = res.data.remark;
-          this.area = res.data.area;
-          this.order_info = res.data.order_info;
+
+          if(res.code != 200){
+            this.$toast(reg.msg);
+            setTimeout(()=>{
+              this.$router.back()
+            },1500)
+          }else{
+            this.status = res.data.status;
+            this.express_price = res.data.express_price;
+            this.goods_total = res.data.goods_total;
+            this.price_total = res.data.price_total;
+            this.pay_time = res.data.pay_time;
+            this.order_type = res.data.order_type;
+            this.created_at = res.data.created_at;
+            this.send_time = res.data.send_time;
+            this.confirm_time = res.data.confirm_time;
+            this.comment_time = res.data.comment_time;
+            this.after_serve_time = res.data.after_serve_time;
+            this.county_id = res.data.county_id;
+            this.address = res.data.address;
+            this.username = res.data.username;
+            this.tel = res.data.tel;
+            this.remark = res.data.remark;
+            this.area = res.data.area;
+            this.order_info = res.data.order_info;
+          }
         }).catch(err=>{
           console.log(err);
         })

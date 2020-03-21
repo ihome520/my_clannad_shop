@@ -198,6 +198,9 @@
       //如果不是从其他页面返回，或者是第一次进入的时候，就获取最新的数据
       if(!this.$route.meta.isBack || this.isFirstEnter){
         this.scrollY = 0;
+        this.next_page = 2;
+        this.order_list = [];
+        this.not_data = false;
 
         this.active = this.$route.params.type
         if(this.$route.params.type != 'all'){ //如果不是所有的情况下，就改变类型
