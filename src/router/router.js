@@ -62,6 +62,15 @@ export default [
     }
   },
   {
+    path:'/order_confirm/coupons',
+    name:'coupons',
+    component:() => import('views/order_comfirm/components/Coupons.vue'),
+    meta:{
+      requireAuth: true,
+      fullScreen:true
+    }
+  },
+  {
     path:'/buy_goods', //立即下单后的跳转页面
     name:'buy_goods',
     component:() => import('views/buy_goods/BuyGoods.vue'),

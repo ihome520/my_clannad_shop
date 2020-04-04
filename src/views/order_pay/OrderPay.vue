@@ -112,7 +112,7 @@
             this.balance = res.data.balance;
 
             if(parseFloat(this.balance) < parseFloat(this.price_total)){
-              this.balance_ctrl = true;//余额不足时，不能用月支付
+              this.balance_ctrl = true;//余额不足时，不能用余额支付
             }
           }
         })
