@@ -9,8 +9,7 @@
         <span @click="showCoupons">点击选择</span>
       </div>
     </div>
-
-    <coupons ref="coupons" class="coupons_box"/>
+    <coupons ref="coupons" :coupons="coupons" class="coupons_box"/>
     <van-goods-action class="goods_action">
       <div class="total_price" slot="default">
         合计：<span>￥{{ total_price }} 元</span>
@@ -73,6 +72,7 @@
             console.log(res);
             this.user_address = res.data.user_address;
             this.cart_list = res.data.cart_list;
+            this.coupons = res.data.coupons;//获得可使用的优惠券列表
           }
         })
       },

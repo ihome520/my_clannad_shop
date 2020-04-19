@@ -3,37 +3,41 @@
     <van-nav-bar fixed title="可用优惠券" right-text="返回" right-arrow @click-right="onClickLeft"/>
     <div class="content">
       <!-- 优惠券类型 店铺满减 店铺折扣 全程通用满减 折扣 免邮  -->
-        <div class="coupon_list">
-          <!--全场满减-->
-          <div class="all_dec">
-            <div class="all_dec_left">
-              <span>通用</span>
-            </div>
-            <div class="all_dec_right">
-              <div class="all_dec_right_top">
-                <span>全场满1000 减 100全场满1000 减 100全场满1000 减 100全场满1000 减 100全场满1000 减 100</span>
+
+      <div class="coupon_list">
+        <!--全场满减-->
+        <van-radio-group v-model="coupons_index">
+            <div class="all_dec" v-for="(item,index) in coupons" :key="index">
+              <div class="all_dec_left">
+                <span>{{ item.name }}</span>
               </div>
-              <div class="all_dec_right_bottom">
-                <span>使用状态： 未使用</span>
-                <van-checkbox v-model="is_checked">复选框</van-checkbox>
+              <div class="all_dec_right">
+                <div class="all_dec_right_top">
+                  <span>全场满1000 减 100全场满1000 减 100全场满1000 减 100全场满1000 减 100全场满1000 减 100</span>
+                </div>
+                <div class="all_dec_right_bottom">
+                  <span>使用状态： 未使用</span>
+                  <van-radio :name="item.id">复选框</van-radio>
+                </div>
               </div>
             </div>
+        </van-radio-group>
+
+        <div class="all_dec">
+          <div class="all_dec_left">
+            <span>{{ abd }}</span>
           </div>
-          <div class="all_dec">
-            <div class="all_dec_left">
-              <span>通用</span>
+          <div class="all_dec_right">
+            <div class="all_dec_right_top">
+              <span>全场满1000 减 100全场满1000 减 100全场满1000 减 100全场满1000 减 100全场满1000 减 100</span>
             </div>
-            <div class="all_dec_right">
-              <div class="all_dec_right_top">
-                <span>全场满1000 减 100全场满1000 减 100全场满1000 减 100全场满1000 减 100全场满1000 减 100</span>
-              </div>
-              <div class="all_dec_right_bottom">
-                <span>使用状态： 未使用</span>
-                <van-checkbox v-model="is_checked">复选框</van-checkbox>
-              </div>
+            <div class="all_dec_right_bottom">
+              <span>使用状态： 未使用</span>
+              <van-checkbox v-model="is_checked">复选框</van-checkbox>
             </div>
           </div>
         </div>
+      </div>
 
     </div>
   </div>
@@ -45,22 +49,49 @@
     name: "Coupons",
     components: {},
     props: {
-
+      coupons:{
+        type:Array,
+        default(){
+          return []
+        }
+      }
     },
     data() {
       return {
-        is_checked:true,
-        coupons_ctrl:false
+        is_checked: true,
+        coupons_ctrl: false,
+        abd: '123',
+        coupons: [
+          {
+            id:1,
+            name:'满减'
+          },
+          {
+            id:2,
+            name:'满减'
+          },
+          {
+            id:3,
+            name:'满减'
+          },
+          {
+            id:4,
+            name:'满减'
+          },
+          {
+            id:5,
+            name:'满减'
+          }
+        ],
+        coupons_index: [
+          1, 2,3,4,5
+        ],
       }
     },
-    filters:{
-
-    },
-    watch: {
-
-    },
+    filters: {},
+    watch: {},
     methods: {
-      onClickLeft(){
+      onClickLeft() {
         this.coupons_ctrl = false
       }
     },
@@ -74,7 +105,7 @@
 </script>
 
 <style scoped lang="less">
-  .content{
+  .content {
     position: absolute;
     top: 46px;
     bottom: 0;
@@ -82,11 +113,12 @@
     overflow: scroll;
     background: #eaeaea;
 
-    .coupon_list{
+    .coupon_list {
       padding: 2%;
 
       /*全场通用满减*/
-      .all_dec{
+
+      .all_dec {
         display: flex;
         background-color: #fff;
         border-radius: 5px;
@@ -94,7 +126,7 @@
         margin-bottom: 5px;
         box-sizing: border-box;
 
-        .all_dec_left{
+        .all_dec_left {
           width: 20%;
           display: flex;
           text-align: center;
@@ -104,17 +136,17 @@
           font-weight: bold;
         }
 
-        .all_dec_right{
+        .all_dec_right {
           width: 80%;
           display: flex;
           flex-direction: column;
-          flex-grow:1;
+          flex-grow: 1;
 
-          .all_dec_right_top{
+          .all_dec_right_top {
             font-size: 16px;
           }
 
-          .all_dec_right_bottom{
+          .all_dec_right_bottom {
             display: flex;
             justify-content: space-between;
             align-items: center;
