@@ -44,12 +44,14 @@
         express_type: 1,//快递配送类型 1是快递 2是自提
         total_price: 0,
         express_price:0,
+        free_express_price:false,//是否为免邮
         coupon_price: 0,//优惠券金额
         remark: '',//备注
         user_coupon_id: 0,
         coupon_name: '点击选择',
         goods_total_price:0,
         total_goods:0,
+        coupon_type:0,//优惠券类型，用于判断是否是包邮券，如果选择了自提，那么将不消耗此优惠券。
       }
     },
     watch: {
@@ -100,7 +102,16 @@
       },
       //改变配送方式
       changeExpress(express_type) {
+        if(express_type == 2){
+          if(this.coupon_type == 5){
+            this.user_coupon_id = 0;
+            this.$refs['coupons'].coupons_index = 0;
+            this.coupon_type = 0;
+            this.coupon_name = '点击选择';
+          }
+        }
         this.express_type = express_type;
+        // this.$forceUpdate(); //重绘
         this.calcGoods();//重新计算价格
       },
       //设置备注
@@ -114,8 +125,11 @@
       //选择优惠券后
       selectCoupon(user_coupon_id) {
         if (user_coupon_id != '0') {
+          this.free_express_price = false; //默认是不免邮
+
           this.coupons.forEach(item => {
             if (item.id == user_coupon_id) {
+              this.coupon_type = item.coupon_type;
               //优惠券类型 1.店铺满减 2.店铺折扣 3.通用满减 4.通用折扣 5.免邮 6.指定商品
               if(item.coupon_type == 1 || item.coupon_type == 3 || item.coupon_type == 6){
                 this.coupon_name = item.coupon.coupon_name + '(-' + item.dec_price + '元)';
@@ -126,9 +140,29 @@
               }else if(item.coupon_type == 2){
 
               }else if(item.coupon_type == 4){
+                let dec_price =this.goods_total_price - this.goods_total_price * (item.discount / 100);
+                dec_price = this.$utils.toDecimal(dec_price);
 
+                this.coupon_name = item.coupon.coupon_name + '(-' + dec_price + '元)';
+                this.coupon_price = dec_price;
+
+                this.user_coupon_id = user_coupon_id;
+
+                return ;
               }else if(item.coupon_type == 5){
+                if(this.express_type == 2){
+                  this.$toast('当前订单不需要邮费，无法使用该优惠券');
+                  this.$refs['coupons'].coupons_index = 0;
 
+                  // this.$forceUpdate(); //重绘
+                  return ;
+                }else{
+                  this.free_express_price = true;
+                  this.coupon_name = item.coupon.coupon_name;
+                  this.coupon_price = 0;
+
+                  this.user_coupon_id = user_coupon_id;
+                }
               }
             }
           })
@@ -156,7 +190,9 @@
           this.total_price = this.goods_total_price;
         }
 
-        if(this.express_type == 1){
+        if(this.free_express_price){ //免邮
+          this.express_price = 0.00;
+        }else if(this.express_type == 1){
           this.express_price = 8.00;
           this.total_price =  parseFloat(this.total_price) + parseFloat(this.express_price);
         }else{

@@ -170,6 +170,15 @@ export default [
     }
   },
   {
+    path:'/my_coupons', //我的优惠券列表
+    name:'my_coupons',
+    component:() => import('views/my_coupons/MyCoupons.vue'),
+    meta:{
+      requireAuth: true,
+      fullScreen:true
+    }
+  },
+  {
     path:'/user_addr_add', //用户地址添加
     name:'user_addr_add',
     component:() => import('views/user_addr_add/UserAddrAdd.vue'),

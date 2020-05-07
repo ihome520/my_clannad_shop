@@ -12,11 +12,12 @@
         <van-radio-group v-model="coupons_index">
             <div class="all_dec" v-for="(item,index) in coupons" :key="index">
               <div class="all_dec_left">
-                <span>优惠</span>
+                <span>{{ coupon_type[item.coupon_type] }}</span>
               </div>
               <div class="all_dec_right">
                 <div class="all_dec_right_top">
-                  <span>{{item.coupon.coupon_name}}</span>
+                  <span v-if="item.coupon_type != 6">{{item.coupon.coupon_name}}</span>
+                  <span v-if="item.coupon_type == 6">购买指定商品减{{ item.dec_price }}元</span>
                 </div>
                 <div class="all_dec_right_bottom">
                   <span>有效状态： 有效</span>
@@ -64,6 +65,7 @@
         is_checked: true,
         coupons_ctrl: false,
         coupons_index: [],
+        coupon_type:[0,'满减','折扣','满减','折扣','包邮','指定']
       }
     },
     filters: {},

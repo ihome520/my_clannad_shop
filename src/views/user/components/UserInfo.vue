@@ -26,9 +26,9 @@
             <span>足迹</span>
           </li>
         </router-link>
-        <router-link to="/">
+        <router-link to="/my_coupons">
           <li>
-            <span>45</span>
+            <span>{{ user_info.coupons }}</span>
             <span>优惠券</span>
           </li>
         </router-link>
@@ -60,12 +60,15 @@
     },
     watch: {},
     filter: {},
-    methods: {},
+    methods: {
+      onClickLeft() {
+        this.$router.replace('/user');
+      },
+    },
     created() {
 
     },
     mounted() {
-
     }
   }
 
