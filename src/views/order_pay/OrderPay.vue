@@ -11,7 +11,10 @@
           <div>
             <div>订单号：{{ order_sn }}</div>
             <div>物品数量：{{ goods_total }}件</div>
-            <div>总金额：{{ price_total }}元</div>
+            <div>商品原价：{{ org_price_total }}元</div>
+            <div>优惠金额：{{ coupon_price }}元</div>
+            <div>运费金额：{{ express_price }}元</div>
+            <div>实付金额：{{ price_total }}元</div>
             <div>下单时间：{{ created_at }}</div>
             <div class="balance">个人账户余额：{{ balance }}</div>
           </div>
@@ -64,6 +67,9 @@
         balance_ctrl:false,//控制余额的有效性
         password:'',
         showKeyboard:false,
+        org_price_total:0, //原价 不含优惠券
+        coupon_price:0,
+        express_price:0,
       }
     },
     watch: {},
@@ -108,6 +114,9 @@
           }else{
             this.goods_total = res.data.order_info.goods_total;
             this.price_total = res.data.order_info.price_total;
+            this.org_price_total = res.data.order_info.org_price_total;
+            this.express_price = res.data.order_info.express_price;
+            this.coupon_price = res.data.order_info.coupon_price;
             this.created_at = res.data.order_info.created_at;
             this.balance = res.data.balance;
 

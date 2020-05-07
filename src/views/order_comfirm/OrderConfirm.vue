@@ -3,16 +3,16 @@
     <van-nav-bar fixed title="订单确认" left-text="返回" left-arrow @click-left="onClickLeft"/>
     <div class="content">
       <user-address :user_address="user_address" @change_address="change_address"/>
-      <order-info @changeExpress="changeExpress" @computed_total_price="computed_total_price" @setRemarks="setRemarks" :cart_list="cart_list"/>
+      <order-info :goods_total_price="goods_total_price" @changeExpress="changeExpress" :total_goods="total_goods" @setRemarks="setRemarks" :cart_list="cart_list"/>
       <div class="coupons_select">
         <span>选择优惠券</span>
-        <span @click="showCoupons">点击选择</span>
+        <span @click="showCoupons">{{ coupon_name }}</span>
       </div>
     </div>
-    <coupons ref="coupons" :coupons="coupons" class="coupons_box"/>
+    <coupons ref="coupons" @selectCoupon="selectCoupon" :coupons="coupons" class="coupons_box"/>
     <van-goods-action class="goods_action">
       <div class="total_price" slot="default">
-        合计：<span>￥{{ total_price }} 元</span>
+        合计：<span>￥{{ total_price }} 元 (含运费 {{express_price}} 元)</span>
       </div>
       <van-goods-action-button :loading="sumbiting" class="submit_btn" type="danger" text="提交订单" @click="sumbitOrder"/>
     </van-goods-action>
@@ -43,10 +43,23 @@
         user_addr_id: 0,//当前选中的地址id
         express_type: 1,//快递配送类型 1是快递 2是自提
         total_price: 0,
+        express_price:0,
+        coupon_price: 0,//优惠券金额
         remark: '',//备注
+        user_coupon_id: 0,
+        coupon_name: '点击选择',
+        goods_total_price:0,
+        total_goods:0,
       }
     },
-    watch: {},
+    watch: {
+      cart_list:{
+        handler(newValue){
+          this.calcGoods(newValue); //计算价格
+        },
+        deep:true
+      },
+    },
     beforeCreate() {
       document.querySelector('body').setAttribute('style', 'background-color:#eaeaea')
     },
@@ -69,10 +82,9 @@
             this.$router.replace('/cart'); //发生错误，调回购物车页面
           } else {
             //订单确认页
-            console.log(res);
             this.user_address = res.data.user_address;
             this.cart_list = res.data.cart_list;
-            this.coupons = res.data.coupons;//获得可使用的优惠券列表
+            this.coupons = res.data.can_use_coupons;//获得可使用的优惠券列表
           }
         })
       },
@@ -89,19 +101,74 @@
       //改变配送方式
       changeExpress(express_type) {
         this.express_type = express_type;
+        this.calcGoods();//重新计算价格
       },
-      /**
-       * 获取计算的价格
-       */
-      computed_total_price(price) {
-        this.total_price = price;
-      },
+      //设置备注
       setRemarks(remarks) {
         this.remark = remarks;
       },
       //显示可用优惠券
       showCoupons() {
         this.$refs.coupons.coupons_ctrl = true;
+      },
+      //选择优惠券后
+      selectCoupon(user_coupon_id) {
+        if (user_coupon_id != '0') {
+          this.coupons.forEach(item => {
+            if (item.id == user_coupon_id) {
+              //优惠券类型 1.店铺满减 2.店铺折扣 3.通用满减 4.通用折扣 5.免邮 6.指定商品
+              if(item.coupon_type == 1 || item.coupon_type == 3 || item.coupon_type == 6){
+                this.coupon_name = item.coupon.coupon_name + '(-' + item.dec_price + '元)';
+                this.coupon_price = item.dec_price;//优惠金额
+                this.user_coupon_id = user_coupon_id;
+
+                return ;
+              }else if(item.coupon_type == 2){
+
+              }else if(item.coupon_type == 4){
+
+              }else if(item.coupon_type == 5){
+
+              }
+            }
+          })
+        } else {
+          this.coupon_name = '点击选择';
+          this.coupon_price = 0;//优惠金额
+          this.user_coupon_id = 0;
+        }
+
+        this.calcGoods();//重新计算价格
+      },
+      /**
+       * 计算价格
+       * @param cart_list
+       */
+      calcGoods(){
+        this.total_price = this.goods_total_price;
+
+        if(!this.goods_total_price){
+          this.cart_list.forEach(item=>{
+            this.goods_total_price += parseFloat(item.price) * item.number;
+            this.total_goods += item.number;
+          })
+          this.goods_total_price = this.$utils.toDecimal(this.goods_total_price);//保存2位小数，且保留0.00位数
+          this.total_price = this.goods_total_price;
+        }
+
+        if(this.express_type == 1){
+          this.express_price = 8.00;
+          this.total_price =  parseFloat(this.total_price) + parseFloat(this.express_price);
+        }else{
+          this.express_price = 0.00;
+        }
+
+        //计算
+        if(this.user_coupon_id){
+          this.total_price -= parseFloat(this.coupon_price);
+        }
+
+        this.total_price = this.$utils.toDecimal(this.total_price);//保存2位小数，且保留0.00位数
       },
       /**
        * 提交订单
@@ -112,9 +179,9 @@
           user_addr_id: this.user_addr_id,
           cart_ids: this.cart_ids,
           remark: this.remark,
-          express_type: this.express_type
+          express_type: this.express_type,
+          coupon_id:this.user_coupon_id,
         }).then(res => {
-          console.log(res);
           if (res.code != 200) {
             this.sumbiting = false
             this.$toast(res.msg);
@@ -130,9 +197,7 @@
         })
       }
     },
-
   }
-
 </script>
 
 <style scoped lang="less">

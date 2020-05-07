@@ -32,7 +32,7 @@
         </div>
         <div class="total">
           <span>共 {{ total_goods }} 件</span>
-          共计：<span class="total_price">￥{{ total_price }}元(含运费 {{express_price}} 元)</span>
+          共计：<span class="total_price">￥{{ goods_total_price }}元</span>
         </div>
       </div>
 
@@ -58,7 +58,9 @@
         default(){
           return []
         }
-      }
+      },
+      goods_total_price:0,
+      total_goods:0,
     },
     data() {
       return {
@@ -68,18 +70,10 @@
         expressListKv:[1,2],
         express_value:'快递配送',
         express_type:1,
-        total_goods:0,
-        total_price:0.00,
         express_price:8.00,//暂定快递费写死状态，8元
       }
     },
     watch: {
-      cart_list:{
-        handler(newValue){
-          this.calcGoods(newValue); //计算价格
-        },
-        deep:true
-      },
       remarks(newValue){
         this.$emit('setRemarks',newValue);
       }
@@ -97,36 +91,10 @@
         this.showPicker = false;
         this.express_value = value;//显示配送方式名称
         this.express_type = this.expressListKv[index];
-        this.calcGoods(this.cart_list);//重新计算价格
         this.$emit('changeExpress',this.expressListKv[index]);
       },
-      /**
-       * 计算价格
-       * @param cart_list
-       */
-      calcGoods(cart_list){
-        this.total_price = 0.00;
-        cart_list.forEach(item=>{
-          this.total_price += parseFloat(item.price) * item.number;
-        })
-
-        if(this.express_type == 1){
-          this.express_price = 8.00;
-          this.total_price += parseFloat(this.express_price);
-        }else{
-          this.express_price = 0.00;
-        }
-
-        this.total_price = this.$utils.toDecimal(this.total_price);//保存2位小数，且保留0.00位数
-        this.$emit('computed_total_price',this.total_price)
-      }
-    },
-    created() {
 
     },
-    mounted() {
-
-    }
   }
 
 </script>

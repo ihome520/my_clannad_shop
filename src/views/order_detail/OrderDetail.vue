@@ -48,7 +48,15 @@
           <span>x {{ goods_total }}(件)</span>
         </div>
         <div class="price_total">
-          <span>商品总价(含运费)：</span>
+          <span>商品原价：</span>
+          <span>{{ org_price_total }}元</span>
+        </div>
+        <div class="price_total">
+          <span>优惠金额：</span>
+          <span>{{ coupon_price }}元</span>
+        </div>
+        <div class="price_total">
+          <span>实付总价(含运费)：</span>
           <span>{{ price_total }}元</span>
         </div>
         <div class="express_total">
@@ -125,7 +133,9 @@
         tel: "19950008856",
         remark: null,
         area: "中国辽宁省大连市沙河口区",
-        order_info: []
+        order_info: [],
+        org_price_total:0, //原价 不含优惠券
+        coupon_price:0,
       }
     },
     watch: {},
@@ -166,6 +176,8 @@
             this.status = res.data.status;
             this.express_price = res.data.express_price;
             this.goods_total = res.data.goods_total;
+            this.org_price_total = res.data.org_price_total;
+            this.coupon_price = res.data.coupon_price;
             this.price_total = res.data.price_total;
             this.pay_time = res.data.pay_time;
             this.order_type = res.data.order_type;

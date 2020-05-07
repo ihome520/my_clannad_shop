@@ -2,6 +2,9 @@
   <div class="coupons" v-show="coupons_ctrl">
     <van-nav-bar fixed title="可用优惠券" right-text="返回" right-arrow @click-right="onClickLeft"/>
     <div class="content">
+      <div class="not_use">
+        <span @click="selectCoupon(0)">不使用优惠券</span>
+      </div>
       <!-- 优惠券类型 店铺满减 店铺折扣 全程通用满减 折扣 免邮  -->
 
       <div class="coupon_list">
@@ -9,21 +12,21 @@
         <van-radio-group v-model="coupons_index">
             <div class="all_dec" v-for="(item,index) in coupons" :key="index">
               <div class="all_dec_left">
-                <span>{{ item.name }}</span>
+                <span>优惠</span>
               </div>
               <div class="all_dec_right">
                 <div class="all_dec_right_top">
-                  <span>全场满1000 减 100全场满1000 减 100全场满1000 减 100全场满1000 减 100全场满1000 减 100</span>
+                  <span>{{item.coupon.coupon_name}}</span>
                 </div>
                 <div class="all_dec_right_bottom">
-                  <span>使用状态： 未使用</span>
-                  <van-radio :name="item.id">复选框</van-radio>
+                  <span>有效状态： 有效</span>
+                  <van-radio :name="item.id" @click="selectCoupon(item.id)">使用</van-radio>
                 </div>
               </div>
             </div>
         </van-radio-group>
 
-        <div class="all_dec">
+        <!--<div class="all_dec">
           <div class="all_dec_left">
             <span>{{ abd }}</span>
           </div>
@@ -36,7 +39,7 @@
               <van-checkbox v-model="is_checked">复选框</van-checkbox>
             </div>
           </div>
-        </div>
+        </div>-->
       </div>
 
     </div>
@@ -60,39 +63,29 @@
       return {
         is_checked: true,
         coupons_ctrl: false,
-        abd: '123',
-        coupons: [
-          {
-            id:1,
-            name:'满减'
-          },
-          {
-            id:2,
-            name:'满减'
-          },
-          {
-            id:3,
-            name:'满减'
-          },
-          {
-            id:4,
-            name:'满减'
-          },
-          {
-            id:5,
-            name:'满减'
-          }
-        ],
-        coupons_index: [
-          1, 2,3,4,5
-        ],
+        coupons_index: [],
       }
     },
     filters: {},
-    watch: {},
+    watch: {
+      coupons:{
+        handler(newValue,oldValue){
+          newValue.forEach(item => {
+            this.coupons_index.push(item.id);
+          })
+        }
+      }
+    },
     methods: {
       onClickLeft() {
         this.coupons_ctrl = false
+      },
+      selectCoupon(user_coupon_id){
+        if(user_coupon_id == '0'){
+          this.coupons_index = 0;
+        }
+        this.$emit('selectCoupon',user_coupon_id);
+        this.coupons_ctrl = false;
       }
     },
     created() {
@@ -112,6 +105,16 @@
     width: 100%;
     overflow: scroll;
     background: #eaeaea;
+
+    .not_use{
+      font-size: 16px;
+      display: flex;
+      color: red;
+      justify-content: flex-end;
+      padding: 1%;
+      border-bottom: #9e9e9e 1px solid;
+      background-color: #fff;
+    }
 
     .coupon_list {
       padding: 2%;
