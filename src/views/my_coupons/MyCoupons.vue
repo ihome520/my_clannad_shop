@@ -30,7 +30,8 @@
               </template>
 
               <div class="coupon_name" v-if="item.coupon_type == 5">抵扣商品邮费</div>
-              <div class="coupon_name" v-if="item.coupon_type == 6">购买{{ item.goods_name }}满{{ item.goods_number }}件减{{ item.dec_price }}元</div>
+              <div class="coupon_name" v-if="item.coupon_type == 6">购买{{ item.goods_name }}</div>
+              <div class="dec_price" v-if="item.coupon_type == 6">满{{ item.goods_number }}件减{{ item.dec_price }}元</div>
               <div class="effective_time">有效期：{{item.start_time}} ~ {{item.end_time}}</div>
               <div class="status">
                 <span>
@@ -228,6 +229,10 @@
               span:nth-child(1){
 
               }
+            }
+
+            .dec_price{
+              color:#1c8fd2;
             }
           }
 

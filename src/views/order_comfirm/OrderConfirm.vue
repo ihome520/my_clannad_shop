@@ -39,18 +39,18 @@
         user_address: [],
         sumbiting: false,//提交状态
         cart_list: [],
-        coupons: [],
+        coupons: [],//可用优惠券
         user_addr_id: 0,//当前选中的地址id
         express_type: 1,//快递配送类型 1是快递 2是自提
-        total_price: 0,
-        express_price:0,
+        total_price: 0,//商品实际总价 含优惠券和运费
+        express_price:0,//快递价格
         free_express_price:false,//是否为免邮
         coupon_price: 0,//优惠券金额
         remark: '',//备注
         user_coupon_id: 0,
         coupon_name: '点击选择',
-        goods_total_price:0,
-        total_goods:0,
+        goods_total_price:0,//商品原价
+        total_goods:0,//商品数量
         coupon_type:0,//优惠券类型，用于判断是否是包邮券，如果选择了自提，那么将不消耗此优惠券。
       }
     },
