@@ -1,6 +1,6 @@
 <template>
   <div class="goods_attr">
-    <div class="product_spec_title">产品规格：每个用户限购1件</div>
+    <div class="product_spec_title">产品规格：</div>
     <div class="spec_category" v-for="(item,spec_index) in goods_spec" :key="spec_index">
       <span class="spec_title">{{ item.spec_name }}：</span>
       <ul class="spec">
@@ -12,8 +12,8 @@
     </div>
     <div class="bay_num">
       <span>购买数量：</span>
-      <van-stepper disabled button-size="20" v-model="goods_num" @change="changeGoodsNumber" min="1" max="1" />
-      <span class="inventroy_num">库存：{{ inventory_num }}</span>
+      <van-stepper button-size="20" v-model="goods_num" @change="changeGoodsNumber" min="1" :max="limit_num" />
+      <span class="inventroy_num">每人限购：{{ limit_num }} 件</span>
     </div>
   </div>
 </template>
@@ -29,12 +29,18 @@
           return []
         }
       },
-      inventory_num:{
+      limit_num:{
+        type:[String,Number],
+        default(){
+          return 1;
+        }
+      }
+      /*inventory_num:{
         type:[String,Number],
         default(){
           return '请选择规格';
         }
-      }
+      }*/
     },
     data() {
       return {
@@ -121,7 +127,6 @@
           this.choose_spec[spec_index] = spec_id;
           this.selectIndex[spec_index] = item_index;
 
-
         } else { //再次按下，不选中
           this.choose_spec[spec_index] = "";
           this.selectIndex[spec_index] = -1;
@@ -140,7 +145,6 @@
           choose_spec: this.choose_spec,
           goods_num: this.goods_num
         })
-
 
         this.$forceUpdate(); //重绘
       },

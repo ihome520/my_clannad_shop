@@ -6,9 +6,9 @@ import router from '@/router'
 
 const instance = axios.create();
 
-instance.defaults.baseURL = 'https://wx.17hxg.com/api';
-// instance.defaults.baseURL = 'http://www.66.com/index.php/api';
-instance.defaults.timeout = 5000;
+// instance.defaults.baseURL = 'https://wx.17hxg.com/api';
+instance.defaults.baseURL = 'http://www.66.com/api';
+instance.defaults.timeout = 30000;
 // instance.defaults.withCredentials = true // 允许携带cookie
 // instance.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 

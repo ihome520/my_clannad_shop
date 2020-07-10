@@ -36,5 +36,6 @@
 
   .content{
     font-size: 14px;
+    margin-bottom: 50px;
   }
 </style>

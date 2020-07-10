@@ -2,7 +2,9 @@
   <div class="goods">
     <van-nav-bar title="商品详情" left-text="返回" left-arrow @click-left="onClickLeft"/>
     <goods-swiper :album="goods_album"/>
-    <goods-price :goods="goods" :goods_inventory="goods_inventory" :select_goods_price="select_goods_price"/>
+    <goods-price :goods="goods" :goods_inventory="goods_inventory" :select_goods_price="select_goods_price"
+                 :seckill_info="seckill_info"
+    />
     <goods-attr :goods_spec="goods_spec" :goods_inventory="goods_inventory"
                 @changeSelectSpec="changeSelectSpec"
                 @changeGoodsNumber="changeGoodsNumber"
@@ -47,6 +49,7 @@
         choose_spec: [],
         goods_num: 1,
         select_goods_price:'', //当前选中商品属性的价格
+        seckill_info:{},//秒杀信息
       }
     },
     watch: {
@@ -181,10 +184,16 @@
             return false;
           }
 
+          //判断秒杀是否已经开始 如果开始了 就直接跳转到秒杀页面
+          if(res.data.goods.start_kill == 1){
+              this.$router.replace('/seckill_goods?id=' + res.data.seckill_info.id)
+          }
+
           this.goods_album = res.data.goods_album;
           this.goods = res.data.goods;
           this.goods_spec = res.data.goods_spec;
           this.goods_inventory = res.data.goods_inventory;
+          this.seckill_info = res.data.goods.kill_status ? res.data.seckill_info : {};
         })
       }
     }

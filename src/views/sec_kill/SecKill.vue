@@ -7,7 +7,7 @@
     <div class="container">
       <div class="item_box">
 
-        <div class="item" v-for="(item,index) in goodsList" :key="index">
+        <div class="item" v-for="(item,index) in goodsList" :key="index" v-show="goodsList.length">
           <div class="left">
             <img :src="item.thumb" alt=""/>
           </div>
@@ -26,6 +26,10 @@
               </div>
             </div>
           </div>
+        </div >
+
+        <div v-show="!goodsList.length" class="no_active">
+          <span>当前无秒杀活动</span>
         </div>
         <!--<div class="item">
           <div class="left">
@@ -110,7 +114,7 @@
         this.$router.push('/seckill_goods?id=' + id);
       },
       getSecKillGoods() {
-        HttpRequest('/sec_kill/index').then(res => {
+        HttpRequest('ms/sec_kill/index').then(res => {
           this.goodsList = res.data;
         })
       }
@@ -144,6 +148,13 @@
 
     .item_box {
       padding: 2%;
+
+      .no_active{
+        text-align: center;
+        font-size: .6rem;
+        color: #fff;
+        padding-top: .5rem;
+      }
 
       .item {
         padding: 1%;

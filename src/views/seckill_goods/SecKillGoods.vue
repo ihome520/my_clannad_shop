@@ -6,7 +6,7 @@
     <goods-attr :goods_spec="goods_spec"
                 @changeSelectSpec="changeSelectSpec"
                 @changeGoodsNumber="changeGoodsNumber"
-                :inventory_num="inventory_num"
+                :limit_num="limit_num"
     />
     <goods-detail :content="goods.description"/>
     <goods-buy :disabled_buy="disabled_buy" :loading_ctrl="loading_ctrl" @buyGoods="buyGoods"/>
@@ -57,6 +57,7 @@
             return {}
           }
         },
+        active_id:0,
         goods_spec: [
           {
             "goods_id": 122,
@@ -127,8 +128,16 @@
         loading_ctrl:false,//按钮加载
         choose_spec: [],
         goods_num: 1,
-        inventory_num: '请选择规格',
+        limit_num:1,//限购数量
+        // inventory_num: '请选择规格',
         select_goods_price: '', //当前选中商品属性的价格
+      }
+    },
+    watch:{
+      seckill:{
+        handler(newValue,oldValue){
+          this.active_id = newValue.id;
+        }
       }
     },
     mounted() {
@@ -162,7 +171,7 @@
         this.choose_spec = skuData.choose_spec; //已经选中的sku
         this.goods_num = skuData.goods_num;//商品数量
 
-        let filterSpec = this.choose_spec.filter(res => {
+        /*let filterSpec = this.choose_spec.filter(res => {
           return res != '';
         })
         if (filterSpec.length == this.goods_spec.length) {
@@ -189,7 +198,7 @@
         } else {
           this.select_goods_price = '';//没有全选中属性
           this.disabled_buy = false;
-        }
+        }*/
       },
       changeGoodsNumber(goods_num) {
         this.goods_num = goods_num;
@@ -210,7 +219,8 @@
 
         let data = {
           goods_id:this.goods_id,
-          sku_list:this.choose_spec.toString()
+          sku_list:this.choose_spec.toString(),
+          active_id:this.active_id
         }
 
         this.loading_ctrl = true;
@@ -247,7 +257,7 @@
         })
       },
       getGoodsInfo() {
-        HttpRequest('/sec_kill/goods/' + this.$route.query.id).then(res => {
+        HttpRequest('ms/sec_kill/goods/' + this.$route.query.id).then(res => {
           if (res.code == 404) {
             this.$toast({
               message: res.msg,
@@ -257,9 +267,9 @@
               this.$router.back(-1);
             }, 1000)
 
-            setTimeout(() => {
-              location.reload();
-            }, 2000)
+            // setTimeout(() => {
+            //   location.reload();
+            // }, 2000)
 
             return false;
           }
@@ -268,6 +278,7 @@
           this.goods = res.data.goods;
           this.goods_id = res.data.goods.id;
           this.seckill = res.data.seckill;
+          this.limit_num = res.data.seckill.single_num;//下单限购数量
           this.goods_spec = res.data.goods_spec;
           this.goods_inventory = res.data.goods_inventory;
         })

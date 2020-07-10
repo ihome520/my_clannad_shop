@@ -37,6 +37,7 @@
         express_type:1,//快递配送类型 1是快递 2是自提
         total_price:0,
         remark:'',//备注
+        active_id:0,
       }
     },
     watch: {
@@ -69,6 +70,7 @@
             this.user_address = res.data.user_address;
             this.cart_list = res.data.cart_list;
             this.sku = res.data.sku;
+            this.active_id = res.data.active_id;
           }
         })
       },
@@ -105,9 +107,9 @@
           goods_id:this.goods_id,
           sku:this.sku,
           remark:this.remark,
-          express_type:this.express_type
+          express_type:this.express_type,
+          active_id:this.active_id
         }).then(res=>{
-          console.log(res);
           if(res.code != 200){
             this.sumbiting = false
             this.$toast(res.msg);
