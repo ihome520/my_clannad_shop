@@ -7,6 +7,7 @@
                 @changeSelectSpec="changeSelectSpec"
                 @changeGoodsNumber="changeGoodsNumber"
                 :limit_num="limit_num"
+                :inventory_num="inventory_num"
     />
     <goods-detail :content="goods.description"/>
     <goods-buy :disabled_buy="disabled_buy" :loading_ctrl="loading_ctrl" @buyGoods="buyGoods"/>
@@ -129,7 +130,7 @@
         choose_spec: [],
         goods_num: 1,
         limit_num:1,//限购数量
-        // inventory_num: '请选择规格',
+        inventory_num: '请选择规格',
         select_goods_price: '', //当前选中商品属性的价格
       }
     },
@@ -171,20 +172,22 @@
         this.choose_spec = skuData.choose_spec; //已经选中的sku
         this.goods_num = skuData.goods_num;//商品数量
 
-        /*let filterSpec = this.choose_spec.filter(res => {
+        let filterSpec = this.choose_spec.filter(res => {
           return res != '';
         })
         if (filterSpec.length == this.goods_spec.length) {
           //查询库存信息
           await HttpRequest('/ms/sec_kill/getInventory', 'get', {
             id: this.goods_id,
-            sku_list: this.choose_spec.join(',')
+            sku_list: this.choose_spec.join(','),
+            active_id:this.active_id
           }).then(res => {
             if (res.code != 200) {
               this.disabled_buy = true
             } else {
-              if (res.data.inventory) {
-                this.inventory_num = res.data.inventory;//商品当前规格的库存
+              if (parseInt(res.data.inventory)) {
+                // this.inventory_num = res.data.inventory;//商品当前规格的库存
+                this.inventory_num = '有货';//商品当前规格的库存
                 this.disabled_buy = false;
               } else {
                 this.inventory_num = '已售罄';
@@ -198,7 +201,7 @@
         } else {
           this.select_goods_price = '';//没有全选中属性
           this.disabled_buy = false;
-        }*/
+        }
       },
       changeGoodsNumber(goods_num) {
         this.goods_num = goods_num;
@@ -236,6 +239,12 @@
                   goods_id:this.goods_id
                 }
               })
+            })
+          }else if(res.code == 4002){
+            this.$toast(res.msg);
+
+            setTimeout(()=>{
+              window.location.reload();
             })
           }else if(res.code != 200){
             this.$toast(res.msg);

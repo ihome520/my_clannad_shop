@@ -58,7 +58,8 @@
         default(){
           return []
         }
-      }
+      },
+      total_goods:0
     },
     data() {
       return {
@@ -68,7 +69,6 @@
         expressListKv:[1,2],
         express_value:'快递配送',
         express_type:1,
-        total_goods:0,
         total_price:0.00,
         express_price:8.00,//暂定快递费写死状态，8元
       }

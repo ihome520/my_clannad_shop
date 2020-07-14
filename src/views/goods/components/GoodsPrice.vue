@@ -75,7 +75,7 @@
           let top_price = prices.pop();
 
           if(last_price != top_price){
-            this.goods_price = prices.shift() + '~' + prices.pop();
+            this.goods_price = last_price + '~' + top_price;
           }else{
             this.goods_price = top_price;
           }
@@ -84,7 +84,9 @@
       },
       seckill_info:{
         handler(newValue,oldValue){
-          this.seckill_title = '今日' + newValue['start_time'] + ' - ' + newValue['end_time'] + ' 限时秒杀'+ newValue['seckill_price'] +'元，敬请期待';
+          if(Object.keys(newValue).length > 0){
+            this.seckill_title = '今日' + newValue['start_time'] + ' - ' + newValue['end_time'] + ' 限时秒杀'+ newValue['seckill_price'] +'元，敬请期待';
+          }
         }
       }
     },

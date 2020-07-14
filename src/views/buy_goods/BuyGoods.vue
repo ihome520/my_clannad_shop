@@ -3,7 +3,7 @@
     <van-nav-bar fixed title="订单确认" left-text="返回" left-arrow @click-left="onClickLeft"/>
     <div class="content">
       <user-address :user_address="user_address" @change_address="change_address"/>
-      <order-info @changeExpress="changeExpress" @computed_total_price="computed_total_price" @setRemarks="setRemarks" :cart_list="cart_list"/>
+      <order-info @changeExpress="changeExpress" @computed_total_price="computed_total_price" @setRemarks="setRemarks" :cart_list="cart_list" :total_goods="total_goods"/>
     </div>
     <van-goods-action class="goods_action">
       <div class="total_price" slot="default">
@@ -38,10 +38,15 @@
         express_type:1,//快递配送类型 1是快递 2是自提
         total_price:0,
         remark:'',//备注
+        total_goods:0,
       }
     },
     watch: {
-
+      cart_list:{
+        handler(newValue,oldValue){
+          this.total_goods = newValue['0'].number;
+        }
+      }
     },
     beforeCreate () {
       document.querySelector('body').setAttribute('style', 'background-color:#eaeaea')

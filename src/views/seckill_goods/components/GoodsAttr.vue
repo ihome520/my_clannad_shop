@@ -1,6 +1,6 @@
 <template>
   <div class="goods_attr">
-    <div class="product_spec_title">产品规格：</div>
+    <div class="product_spec_title">产品规格：每人限购：{{ limit_num }} 件</div>
     <div class="spec_category" v-for="(item,spec_index) in goods_spec" :key="spec_index">
       <span class="spec_title">{{ item.spec_name }}：</span>
       <ul class="spec">
@@ -13,7 +13,7 @@
     <div class="bay_num">
       <span>购买数量：</span>
       <van-stepper button-size="20" v-model="goods_num" @change="changeGoodsNumber" min="1" :max="limit_num" />
-      <span class="inventroy_num">每人限购：{{ limit_num }} 件</span>
+      <span class="inventroy_num">{{ inventory_num }}</span>
     </div>
   </div>
 </template>
@@ -34,13 +34,13 @@
         default(){
           return 1;
         }
-      }
-      /*inventory_num:{
+      },
+      inventory_num:{
         type:[String,Number],
         default(){
           return '请选择规格';
         }
-      }*/
+      }
     },
     data() {
       return {
